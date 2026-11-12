@@ -1,0 +1,25 @@
+name: Sincronizar SDT
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"     # cada 10 minutos (GitHub puede atrasarlo algunos minutos)
+  workflow_dispatch:            # y a demanda: boton "Leer SDT ahora" de la app, o "Run workflow" aqui
+
+concurrency:
+  group: sincronizar-sdt
+  cancel-in-progress: false
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Leer SDT y guardar en SharePoint
+        run: python3 robot/sincronizar_sdt.py
+        env:
+          SDT_USUARIO: ${{ secrets.SDT_USUARIO }}
+          SDT_CLAVE: ${{ secrets.SDT_CLAVE }}
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}

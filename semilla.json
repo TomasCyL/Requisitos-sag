@@ -1,0 +1,1594 @@
+{
+ "cat": [
+  {
+   "id": "r01",
+   "n": "SRA",
+   "g": "Documentos"
+  },
+  {
+   "id": "r02",
+   "n": "Aviso de proceso",
+   "g": "Documentos"
+  },
+  {
+   "id": "r03",
+   "n": "CSP inscrito",
+   "g": "Documentos"
+  },
+  {
+   "id": "r04",
+   "n": "Planillas de proceso (planta)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r05",
+   "n": "CSG inscritos",
+   "g": "Documentos"
+  },
+  {
+   "id": "r06",
+   "n": "CSG aprobados",
+   "g": "Documentos"
+  },
+  {
+   "id": "r07",
+   "n": "Descolgados",
+   "g": "Documentos"
+  },
+  {
+   "id": "r08",
+   "n": "Huertos suspendidos",
+   "g": "Documentos"
+  },
+  {
+   "id": "r09",
+   "n": "Prospección",
+   "g": "Documentos"
+  },
+  {
+   "id": "r10",
+   "n": "Excluidos (correo Lobesia)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r11",
+   "n": "Mosca",
+   "g": "Documentos"
+  },
+  {
+   "id": "r12",
+   "n": "Guía",
+   "g": "Res. 6510"
+  },
+  {
+   "id": "r13",
+   "n": "Monitoreo de recepción (planta)",
+   "g": "Res. 6510"
+  },
+  {
+   "id": "r14",
+   "n": "Planillas de proceso 600 F. (cuando corresponda) (planta)",
+   "g": "Res. 6510"
+  },
+  {
+   "id": "r15",
+   "n": "Monitoreo de plagas (productores)",
+   "g": "Res. 6510"
+  },
+  {
+   "id": "r16",
+   "n": "Registro de aplicaciones (productores)",
+   "g": "Res. 6510"
+  },
+  {
+   "id": "r17",
+   "n": "Registro de manejo de frutos caídos (productores)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r18",
+   "n": "Registro de exportadores ASOEX y SAG",
+   "g": "Documentos"
+  },
+  {
+   "id": "r19",
+   "n": "Resultado de preinspección",
+   "g": "Documentos"
+  },
+  {
+   "id": "r20",
+   "n": "Power BI",
+   "g": "Documentos"
+  },
+  {
+   "id": "r21",
+   "n": "SDP",
+   "g": "Documentos"
+  },
+  {
+   "id": "r22",
+   "n": "Análisis de residuos (Departamento Técnico)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r23",
+   "n": "Certificado de inspección SAG (certificado verde)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r24",
+   "n": "Certificado BPA (productores)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r25",
+   "n": "Inscripción CSG en Syngenta",
+   "g": "Documentos"
+  },
+  {
+   "id": "r26",
+   "n": "Systems Approach",
+   "g": "Documentos"
+  },
+  {
+   "id": "r27",
+   "n": "Curvas de vuelo (Syngenta)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r28",
+   "n": "Resultado del análisis PNRSV de planta (cuando corresponda) (laboratorio)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r29",
+   "n": "Análisis de Brevipalpus (después de la inspección) (laboratorio)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r30",
+   "n": "POT (productor)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r31",
+   "n": "PFI (Departamento Comercial)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r32",
+   "n": "Etiqueta cuarentenaria",
+   "g": "Documentos"
+  },
+  {
+   "id": "r33",
+   "n": "Sector (cuando corresponda en la etiqueta)",
+   "g": "Documentos"
+  },
+  {
+   "id": "r34",
+   "n": "Anexos",
+   "g": "Despacho"
+  },
+  {
+   "id": "r35",
+   "n": "Adjuntos",
+   "g": "Despacho"
+  },
+  {
+   "id": "r36",
+   "n": "Leyenda",
+   "g": "Despacho"
+  },
+  {
+   "id": "r37",
+   "n": "Etiqueta",
+   "g": "Despacho"
+  },
+  {
+   "id": "r38",
+   "n": "Aéreos (resguardo)",
+   "g": "Despacho",
+   "via": "Aéreo"
+  },
+  {
+   "id": "r39",
+   "n": "Cinta",
+   "g": "Despacho"
+  },
+  {
+   "id": "r40",
+   "n": "Otros",
+   "g": "Despacho"
+  }
+ ],
+ "mer": {
+  "cerezas-todos-los-mercados": {
+   "especie": "Cerezas",
+   "mercado": "Todos los mercados",
+   "cond": "",
+   "base": true,
+   "reqs": {
+    "r01": true,
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-rusia": {
+   "especie": "Cerezas",
+   "mercado": "Rusia",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r34": "ANEXO 2",
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-brasil": {
+   "especie": "Cerezas",
+   "mercado": "Brasil",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r35": "INFORME DE LABORATORIO"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-tailandia": {
+   "especie": "Cerezas",
+   "mercado": "Tailandia",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r35": "PACKING LIST/PERMISO DE IMPORTACIÓN",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-taiwan": {
+   "especie": "Cerezas",
+   "mercado": "Taiwán",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r11": "Radio 7,2 km",
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-canada": {
+   "especie": "Cerezas",
+   "mercado": "Canadá",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r04": true,
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-china": {
+   "especie": "Cerezas",
+   "mercado": "China",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r11": "Radio 27,2 km",
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r17": true,
+    "r20": true,
+    "r22": true,
+    "r24": true,
+    "r28": true,
+    "r32": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA",
+    "r37": "\"Export to the People's Republic of China\"",
+    "r38": "MALLA/MANTA TERMICA",
+    "r39": "CINTA VERDE SAG (1)"
+   },
+   "links": [
+    {
+     "t": "Inscritos y aprobados China",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiNGUxM2QwNmEtZGFiYS00M2Q1LTgyNjYtYzJkZjIyMDlmNGFmIiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5YyIsImMiOjR9"
+    }
+   ],
+   "guia": [
+    {
+     "t": "SRA (CSG/CSP)",
+     "d": "Condición activa, razón social, especie, variedad, comuna y región.",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "CSG y CSP habilitado para China",
+     "d": "Verificar que el predio esté inscrito para exportar cerezas a China y que la empacadora esté inscrita y aprobada. Ambos deben figurar en los listados oficiales.",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiNGUxM2QwNmEtZGFiYS00M2Q1LTgyNjYtYzJkZjIyMDlmNGFmIiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5YyIsImMiOjR9"
+    },
+    {
+     "t": "CSG habilitado para China",
+     "d": "Sistema de verificación chino.",
+     "u": "https://scintl.chinaport.gov.cn/aprwebserver/pages/apr/public/html/companyList.html"
+    },
+    {
+     "t": "CSG y CSP descolgados",
+     "d": "Verificar los CSP y CSG, junto con sus variedades.",
+     "u": "https://descolgados.sag.gob.cl/SQL_Descolga_LEFTlist.asp"
+    },
+    {
+     "t": "Origen permitido (Mosca)",
+     "d": "La fruta debe proceder de regiones permitidas por el Protocolo/Addendum.",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiYjAwY2VkMmYtYzU0Mi00NjhjLTg0MTYtYTgyYmM2OTcyZjdjIiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5YyIsImMiOjR9"
+    },
+    {
+     "t": "Monitoreo de plagas",
+     "d": "Mantener disponible el registro de monitoreo de plagas del CSG, según Lineamientos. — ANEXO 3"
+    },
+    {
+     "t": "Controles fitosanitarios",
+     "d": "Mantener disponible el registro de controles fitosanitarios realizados en el huerto. — ANEXO 1"
+    },
+    {
+     "t": "Manejo de frutos caídos",
+     "d": "Mantener disponible el registro correspondiente al manejo fitosanitario de frutos caídos. — ANEXO 2"
+    },
+    {
+     "t": "Monitoreo de residuos",
+     "d": "Presentar resultado del monitoreo de residuos. Si está pendiente, disponer del comprobante de toma/recepción de muestra por laboratorio, según Lineamientos. — Informe"
+    },
+    {
+     "t": "Trazabilidad",
+     "d": "Asegurarse de que el CSG esté correctamente asociado al producto embalado y al lote presentado."
+    },
+    {
+     "t": "Nivel de muestreo",
+     "d": "Lote ≥1.000 cajas: 1 %. Lote <1.000 cajas: 10 cajas muestra."
+    },
+    {
+     "t": "Condición fitosanitaria",
+     "d": "Producto libre de plagas cuarentenarias, frutas podridas, hojas, ramillas y tierra."
+    },
+    {
+     "t": "Rotulación de envases",
+     "d": "Cada envase debe indicar en inglés: especie, país exportador, lugar de producción (región), CSG o nombre del huerto, CSP y nombre del exportador. — Validación de etiqueta en packing"
+    },
+    {
+     "t": "Leyenda China",
+     "d": "Verificar la leyenda “EXPORTED TO THE PEOPLE’S REPUBLIC OF CHINA”. Para cerezas, el idioma exigido es inglés. — Verificado por el despachador SAG"
+    },
+    {
+     "t": "Ubicación de la leyenda",
+     "d": "Una etiqueta por unidad de envío: si es pallet, una por pallet; si son cajas individuales, una por caja; si es master u otra unidad, una por cada unidad que contiene los envases. — Verificado por el despachador SAG"
+    },
+    {
+     "t": "Certificado de inspección en pallet",
+     "d": "NO se requiere para cerezas China."
+    },
+    {
+     "t": "Lote aprobado SAG",
+     "d": "Revisar existencia."
+    },
+    {
+     "t": "CSG China",
+     "u": "https://scintl.chinaport.gov.cn/aprwebserver/pages/apr/public/html/companyList.html"
+    },
+    {
+     "t": "Descolgados",
+     "u": "https://descolgados.sag.gob.cl/SQL_Descolga_LEFTlist.asp"
+    },
+    {
+     "t": "Verificar CSG/CSP",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiYjAwY2VkMmYtYzU0Mi00NjhjLTg0MTYtYTgyYmM2OTcyZjdjIiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5YyIsImMiOjR9"
+    },
+    {
+     "t": "Planilla de Despacho (PD)",
+     "d": "Obligatoria — Obligatoria — Obligatoria"
+    },
+    {
+     "t": "Anexo PD / Packing List",
+     "d": "Obligatorio — Obligatorio — Obligatorio"
+    },
+    {
+     "t": "Carga del Packing List",
+     "d": "Adjuntar en Multipuerto antes de enviar la PD"
+    },
+    {
+     "t": "Observaciones PD",
+     "d": "Consignar los folios de los pallets incluidos en el envío y la frase: “Fruta producida y embalada fuera del área reglamentada por Ceratitis capitata”. — Fruta producida y embalada fuera del área reglamentada por Ceratitis capitata. — “Envío de fruta en bodega de nave”. Fruta producida y embalada fuera del área reglamentada por Ceratitis capitata."
+    },
+    {
+     "t": "Folio individual del pallet",
+     "d": "Cada pallet debe contar con un folio identificador visible en sus cuatro caras."
+    },
+    {
+     "t": "Etiqueta para China",
+     "d": "EXPORTED TO THE PEOPLE’S REPUBLIC OF CHINA (visible en las cuatro caras)."
+    },
+    {
+     "t": "Resguardo del pallet/carga",
+     "d": "Envase completamente cubierto para evitar contaminación durante traslado/aeropuerto. Ej.: malla <1,6 mm o plástico — Mantener condición de resguardo fitosanitario — Cada pallet cubierto en sus 6 caras con malla ≤1,6 mm, salvo excepción de embalaje establecida"
+    },
+    {
+     "t": "Visibilidad del folio del pallet",
+     "d": "Debe permanecer visible aun con el resguardo. — Siempre visible. — Debe permanecer visible aun con el resguardo."
+    },
+    {
+     "t": "Anexo al CF con folios",
+     "d": "No se adjunta como anexo; los folios se informan en la observación de la PD para incorporarlos en el CF. — No identificado como requisito general — Sí. La contraparte debe elaborar el anexo al CF con los folios de cada pallet despachado."
+    },
+    {
+     "t": "Responsabilidad de la contraparte",
+     "d": "Verificar que los folios físicos coincidan con los informados en la PD. — Verificar la correspondencia entre la carga aprobada y la documentación. — Verificar folios, elaborar el anexo al CF e incluir la observación específica en la PD."
+    }
+   ]
+  },
+  "cerezas-vietnam": {
+   "especie": "Cerezas",
+   "mercado": "Vietnam",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r04": true,
+    "r05": true,
+    "r11": "Radio 7,2 km",
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r31": true,
+    "r32": true
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-japon": {
+   "especie": "Cerezas",
+   "mercado": "Japón",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r06": true,
+    "r11": "Radio 7,2 km",
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r32": true,
+    "r33": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA",
+    "r37": "FOR JAPAN",
+    "r38": "MALLA/MANTA TERMICA",
+    "r39": "Cleared for export (3)"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-corea": {
+   "especie": "Cerezas",
+   "mercado": "Corea",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r06": true,
+    "r09": true,
+    "r11": "Radio 7,2 km",
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r32": true,
+    "r33": true,
+    "r34": "ANEXO 6",
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA",
+    "r37": "FOR KOREA",
+    "r38": "MALLA/MANTA TERMICA",
+    "r39": "CINTA VERDE SAG (1)"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-ecuador": {
+   "especie": "Cerezas",
+   "mercado": "Ecuador",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r35": "PACKING LIST/PERMISO DE IMPORTACIÓN"
+   },
+   "links": [],
+   "guia": []
+  },
+  "cerezas-colombia": {
+   "especie": "Cerezas",
+   "mercado": "Colombia",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r02": true,
+    "r07": true,
+    "r12": true,
+    "r13": true,
+    "r14": true,
+    "r15": true,
+    "r16": true,
+    "r25": true,
+    "r27": true,
+    "r31": true,
+    "r35": "PACKING LIST/PERMISO DE IMPORTACIÓN"
+   },
+   "links": [],
+   "guia": []
+  },
+  "carozos-colombia": {
+   "especie": "Carozos",
+   "mercado": "Colombia",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r02": true,
+    "r04": true,
+    "r07": true,
+    "r16": true,
+    "r25": true,
+    "r27": true,
+    "r31": true,
+    "r35": "PACKING LIST/PERMISO DE IMPORTACIÓN"
+   },
+   "links": [],
+   "guia": []
+  },
+  "ciruelas-usa": {
+   "especie": "Ciruelas",
+   "mercado": "USA",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r02": true,
+    "r10": true,
+    "r11": "Radio 7,2 km",
+    "r16": true,
+    "r26": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA"
+   },
+   "links": [],
+   "guia": []
+  },
+  "ciruelas-china": {
+   "especie": "Ciruelas",
+   "mercado": "China",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r03": true,
+    "r05": true,
+    "r06": true,
+    "r07": true,
+    "r09": true,
+    "r10": true,
+    "r11": "Radio 27,2 km",
+    "r22": true,
+    "r30": true,
+    "r32": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA"
+   },
+   "links": [
+    {
+     "t": "Inscritos China",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiYzE0NmY1OGItOTE5Mi00ZGE2LWE4YjctMGRmNTViODNjNTQ2IiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5"
+    }
+   ],
+   "guia": []
+  },
+  "uvas-china": {
+   "especie": "Uvas",
+   "mercado": "China",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r10": true,
+    "r11": "Radio 27,2 km",
+    "r30": true,
+    "r32": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA"
+   },
+   "links": [],
+   "guia": []
+  },
+  "carozos-china": {
+   "especie": "Carozos",
+   "mercado": "China",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r03": true,
+    "r05": true,
+    "r06": true,
+    "r07": true,
+    "r09": true,
+    "r11": "Radio 27,2 km",
+    "r22": true,
+    "r32": true,
+    "r35": "PACKING LIST",
+    "r36": "FRUTA PRODUCIDA Y EMBALADA FUERA DEL AREA REGLAMENTADA POR CERATITIS CAPITATA"
+   },
+   "links": [
+    {
+     "t": "Aprobados China",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiYzE0NmY1OGItOTE5Mi00ZGE2LWE4YjctMGRmNTViODNjNTQ2IiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5"
+    }
+   ],
+   "guia": []
+  },
+  "pluot-y-plumcot-canada": {
+   "especie": "Pluot y Plumcot",
+   "mercado": "Canadá",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r09": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "ciruelas-canada": {
+   "especie": "Ciruelas",
+   "mercado": "Canadá",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r09": true,
+    "r10": true,
+    "r30": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "carozos-canada": {
+   "especie": "Carozos",
+   "mercado": "Canadá",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r04": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "ciruelas-brasil-tipo-1": {
+   "especie": "Ciruelas",
+   "mercado": "Brasil",
+   "cond": "Tipo 1 · fuera del área reglamentada",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r03": true,
+    "r05": true,
+    "r10": true,
+    "r29": true,
+    "r30": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [
+    {
+     "t": "Inscritos Brasil",
+     "u": "https://www.sag.cl/ambitos-de-accion/exportaciones/registros?title=brasil+ciruelas&field_tema_registros_y_listas_target_id=All&field_tipo_de_registro_target_id=All"
+    }
+   ],
+   "guia": []
+  },
+  "ciruelas-brasil-tipo-2": {
+   "especie": "Ciruelas",
+   "mercado": "Brasil",
+   "cond": "Tipo 2 · dentro del área · sin detección de Lb",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r09": true,
+    "r10": true,
+    "r29": true,
+    "r30": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "ciruelas-brasil-tipo-3": {
+   "especie": "Ciruelas",
+   "mercado": "Brasil",
+   "cond": "Tipo 3 · dentro del área · con detección de Lb · bromuro",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r09": true,
+    "r10": true,
+    "r29": true,
+    "r30": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "ciruelas-brasil-tipo-4": {
+   "especie": "Ciruelas",
+   "mercado": "Brasil",
+   "cond": "Tipo 4 · dentro del área · bromuro",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r10": true,
+    "r29": true,
+    "r30": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "kiwi-brasil": {
+   "especie": "Kiwi",
+   "mercado": "Brasil",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Listado de CSP inscritos",
+     "u": "https://www.sag.gob.cl/content/listado-csp-kiwi-brasil-2025-2026"
+    },
+    {
+     "t": "Listado de SDP registrados",
+     "u": "https://www.sag.gob.cl/content/listado-de-sdp-kiwi-registrados-para-brasil-2025-2026"
+    },
+    {
+     "t": "Listado de SDP aprobados para inspección SMR",
+     "u": "https://www.sag.gob.cl/content/listado-sdp-kiwi-aprobados-para-inspeccion-smr-kiwi-brasil"
+    },
+    {
+     "t": "Sistema de Registro de Productores para Exportación SDP-USA",
+     "d": "SAG :: Sistema Registro SdP-USA",
+     "u": "https://sispusa.sag.gob.cl/pubsber/reporteSDPver3.asp"
+    },
+    {
+     "t": "Registro de SDP de kiwi aprobados e informados – SMR",
+     "u": "https://www.sag.gob.cl/content/registro-sdp-kiwi-aprobados-informados-smr-brasil"
+    },
+    {
+     "t": "Fumigación con bromuro en origen"
+    },
+    {
+     "t": "Solo despacho"
+    },
+    {
+     "t": "NOTA IMPORTANTE"
+    },
+    {
+     "t": "Si se descuelga un SDP, la medida es retroactiva para la fruta aprobada en planta. Por lo tanto, toda la fruta aprobada debe fumigarse para ingresar a Brasil o destinarse a otro mercado."
+    }
+   ]
+  },
+  "kiwi-peru": {
+   "especie": "Kiwi",
+   "mercado": "Perú",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r02": true,
+    "r03": true,
+    "r05": true,
+    "r06": true,
+    "r07": true,
+    "r16": true,
+    "r19": true,
+    "r31": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Registro de CSG y CSP para kiwi a Perú",
+     "u": "https://www.sag.gob.cl/content/registro-de-csg-y-csp-kiwi-peru"
+    },
+    {
+     "t": "Listado de huertos aprobados para exportar kiwis a Perú",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiYWYzZDA4YmQtYWZiMS00MDNkLWFmZTMtNDY3MThiNDMxYzA2IiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5YyIsImMiOjR9"
+    },
+    {
+     "t": "Preinspección en packing (CSP)",
+     "d": "Revisar 100 frutos por cada CSG; avisar al SAG el día anterior y registrar en el formulario oficial."
+    },
+    {
+     "t": "Registro de productores y variedades excluidas",
+     "u": "https://descolgados.sag.gob.cl/login.asp"
+    },
+    {
+     "t": "Requisito adicional para la inspección",
+     "d": "Presentar el Permiso Fitosanitario de Importación (PFI)."
+    },
+    {
+     "t": "Requisito adicional para la inspección",
+     "d": "Todos los envases deben llevar tapa."
+    },
+    {
+     "t": "Causales de rechazo",
+     "d": "Presencia de plagas cuarentenarias u hojas."
+    },
+    {
+     "t": "Despacho",
+     "d": "SAG solo participa en los embarques terrestres."
+    }
+   ]
+  },
+  "manzanas-brasil": {
+   "especie": "Manzanas",
+   "mercado": "Brasil",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r02": true,
+    "r04": true,
+    "r05": true,
+    "r07": true,
+    "r16": true,
+    "r25": true,
+    "r27": true,
+    "r31": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "carozos-mexico": {
+   "especie": "Carozos",
+   "mercado": "México",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r02": true,
+    "r10": true,
+    "r11": "Radio 7,2 km",
+    "r16": true,
+    "r18": true,
+    "r19": true,
+    "r21": true,
+    "r23": true,
+    "r25": true,
+    "r27": true,
+    "r30": true,
+    "r32": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "arandanos-corea": {
+   "especie": "Arándanos",
+   "mercado": "Corea",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r03": true,
+    "r05": true,
+    "r07": true,
+    "r09": true,
+    "r10": true,
+    "r11": true,
+    "r20": true,
+    "r30": true,
+    "r32": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": []
+  },
+  "citricos-corea": {
+   "especie": "Cítricos",
+   "mercado": "Corea",
+   "cond": "",
+   "base": false,
+   "reqs": {
+    "r01": true,
+    "r05": true,
+    "r07": true,
+    "r08": true,
+    "r11": "Radio 7,2 km",
+    "r13": true,
+    "r16": true,
+    "r32": true,
+    "r35": "PACKING LIST"
+   },
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Participantes inscritos: limones",
+     "d": "Listado de participantes inscritos para exportar limones a Corea",
+     "u": "https://www.sag.gob.cl/sites/default/files/LEMON-records-for-KOREA-2026-04-22.xlsx"
+    },
+    {
+     "t": "Descolgados"
+    },
+    {
+     "t": "Listado de huertos suspendidos para exportar cítricos a Corea"
+    },
+    {
+     "t": "Mosca de la fruta",
+     "d": "Radio de 7,2 km"
+    },
+    {
+     "t": "Lineamiento"
+    },
+    {
+     "t": "Presentar monitoreo de recepción (revisión con lupa de 100 frutos por lote)."
+    },
+    {
+     "t": "Presentar monitoreo de huerto (desde diciembre hasta el inicio de la cosecha, cada 30 días)."
+    }
+   ]
+  },
+  "cerezas-usa": {
+   "especie": "Cerezas",
+   "mercado": "USA",
+   "cond": "DI",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "MUESTREO DE CEREZAS CON DI"
+    },
+    {
+     "t": "PASO 1.",
+     "d": "Se realiza el despacho normal."
+    },
+    {
+     "t": "PASO 2.",
+     "d": "Se reordena el lote y, sobre el pallet que queda con menos cajas, se coloca la muestra con una separación de cartón."
+    },
+    {
+     "t": "PASO 3.",
+     "d": "Todos los pallets deben llevar film plástico en la base para sujetar la malla antiáfidos. Además, todos los pallets deben llevar capuchón térmico, excepto el de la muestra (se debe enviar un capuchón adicional)."
+    },
+    {
+     "t": "PASO 4.",
+     "d": "El inspector envía la planilla al sitio luego de sellar el camión con sello SAG."
+    },
+    {
+     "t": "PASO 5.",
+     "d": "Una vez aprobada la muestra, el agente embarcador debe completar la planilla de multipuerto, previa notificación y envío de los documentos por parte de la contraparte SAG."
+    }
+   ]
+  },
+  "clementinas-usa": {
+   "especie": "Clementinas",
+   "mercado": "USA",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Sistema de Registro de Productores para Exportación SDP-USA",
+     "d": "SAG :: Sistema Registro SdP-USA",
+     "u": "https://sispusa.sag.gob.cl/pubsber/reporteSDPver3.asp"
+    },
+    {
+     "t": "NOTA IMPORTANTE"
+    },
+    {
+     "t": "Si se descuelga un SDP para USA, la medida no es retroactiva para la fruta aprobada en planta. Por lo tanto, toda la fruta ya aprobada puede despacharse a USA sin inconvenientes."
+    }
+   ]
+  },
+  "citricos-mexico": {
+   "especie": "Cítricos",
+   "mercado": "México",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "Especies",
+     "d": "Limón, Clementina, Mandarina, Naranja"
+    },
+    {
+     "t": "1. SISTEMAS Y REGISTROS OFICIALES"
+    },
+    {
+     "t": "SRA. CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Sistema SDP-USA",
+     "u": "https://www.sag.gob.cl/sites/default/files/2025-09-29%20Listado%20de%20CSP%20lim%C3%B3n%20clementina%20mandarina%20naranjas%20registrados%20M%C3%A9xico.pdf"
+    },
+    {
+     "t": "Sistema SDP-USA",
+     "d": "SAG Registro SdP-USA"
+    },
+    {
+     "t": "Listado SDP autorizados",
+     "u": "https://www.sag.gob.cl/sites/default/files/2025-09-24%20Listado%20de%20SDP%20lim%C3%B3n%20clementina%20mandarina%20naranja%20M%C3%A9xico.pdf"
+    },
+    {
+     "t": "2. REQUISITOS GENERALES"
+    },
+    {
+     "t": "Mosca de la fruta",
+     "d": "Radio 7,2 km"
+    },
+    {
+     "t": "Informe laboratorio",
+     "d": "Documento emitido por laboratorio autorizado"
+    },
+    {
+     "t": "Restricción",
+     "d": "Sin aviso OVO ni actividades vigentes."
+    },
+    {
+     "t": "3. RECEPCIÓN DE FRUTA"
+    },
+    {
+     "t": "Control de Brevipalpus",
+     "d": "Requiere bromuro de metilo si existe detección o si el SDP no está certificado."
+    },
+    {
+     "t": "Control Brevipalpus",
+     "d": "Requiere bromuro de metilo si existe detección o SDP no certificado"
+    },
+    {
+     "t": "Proceso"
+    },
+    {
+     "t": "Proceso",
+     "d": "Hipoclorito o dióxido de cloro y fungicidas de poscosecha."
+    },
+    {
+     "t": "Tratamientos",
+     "d": "Hipoclorito/dióxido de cloro y fungicidas postcosecha"
+    },
+    {
+     "t": "Materiales",
+     "d": "Permeables a gases, sin bolsas no autorizadas, madera NIMF 15"
+    },
+    {
+     "t": "5. ROTULACIÓN DE CAJAS"
+    },
+    {
+     "t": "Datos obligatorios",
+     "d": "Especie, Chile, SDP, CSG, CSP, fecha empaque, lote interno"
+    },
+    {
+     "t": "Condición",
+     "d": "Envases nuevos, limpios y sin residuos"
+    },
+    {
+     "t": "6. PALLETS"
+    },
+    {
+     "t": "7. PREINSPECCIÓN SAG",
+     "d": "Folio pallet, especie, Chile, CSP de envases, fechas embalaje"
+    },
+    {
+     "t": "7. PRE INSPECCIÓN SAG"
+    },
+    {
+     "t": "Verificar",
+     "d": "SDP, CSP, trazabilidad, identificación variedades y fruta libre de contaminantes"
+    },
+    {
+     "t": "8. INSPECCIÓN SAG"
+    },
+    {
+     "t": "Muestreo",
+     "d": "29 frutos revisados con lupa 20× para detectar Brevipalpus."
+    },
+    {
+     "t": "Control especial",
+     "d": "29 frutos revisados con lupa 20X para Brevipalpus"
+    },
+    {
+     "t": "9. RESULTADO"
+    },
+    {
+     "t": "Aprobado",
+     "d": "Lote habilitado para exportación"
+    },
+    {
+     "t": "Rechazado",
+     "d": "Aplican requisitos de tratamiento según plaga detectada"
+    },
+    {
+     "t": "Bromuro de metilo"
+    },
+    {
+     "t": "Bromuro de Metilo",
+     "d": "1.000 ppm; 4–5 días más 2 días de ventilación."
+    },
+    {
+     "t": "Fosfina",
+     "d": "1000 ppm; 4-5 días + 2 días ventilación"
+    },
+    {
+     "t": "11. DESPACHO"
+    },
+    {
+     "t": "Checklist",
+     "d": "Lote aprobado, trazabilidad, contenedor sellado SAG y certificado fitosanitario"
+    },
+    {
+     "t": "CONTROL CRÍTICO"
+    },
+    {
+     "t": "Revisar",
+     "d": "SDP, condición SDP, CSP, CSG, trazabilidad, rotulación, estado fruta y variedades"
+    },
+    {
+     "t": "LISTA DE VERIFICACIÓN DETALLADA",
+     "d": "☐ Ventana de identificación visible en sus 4 costados."
+    },
+    {
+     "t": "La ventana debe indicar:"
+    },
+    {
+     "t": "Folio pallet · Especie · Chile · CSP de los envases · Fechas de embalaje de los envases."
+    },
+    {
+     "t": "5. ANTES DE SOLICITAR INSPECCIÓN SAG"
+    },
+    {
+     "t": "La Contraparte debe verificar:"
+    },
+    {
+     "t": "☐ SDP con condición correcta en sistema."
+    },
+    {
+     "t": "☐ SDP incluido en nómina oficial."
+    },
+    {
+     "t": "☐ CSP incluido en nómina oficial."
+    },
+    {
+     "t": "☐ Rotulación de cajas correcta."
+    },
+    {
+     "t": "☐ Trazabilidad completa."
+    },
+    {
+     "t": "☐ Todos los SDP y variedades correctamente identificados."
+    },
+    {
+     "t": "☐ Fruta libre de tierra, hojas, tallos y otros contaminantes."
+    },
+    {
+     "t": "6. INSPECCIÓN FITOSANITARIA"
+    },
+    {
+     "t": "Todos los pallets deben disponerse de forma que SAG pueda verificar todas sus caras."
+    },
+    {
+     "t": "Muestreo SAG:"
+    },
+    {
+     "t": "Tamaño del lote - Cajas muestra"
+    },
+    {
+     "t": "≥ 1.000 cajas - 2% del lote"
+    },
+    {
+     "t": "< 1.000 cajas - 19 cajas"
+    },
+    {
+     "t": "La muestra debe representar todos los SDP y todas las variedades que componen el lote."
+    },
+    {
+     "t": "Control especial Brevipalpus: se obtiene una submuestra de 29 frutos, se levanta la roseta y se revisa con lupa 20X."
+    },
+    {
+     "t": "7. RESULTADO SAG"
+    },
+    {
+     "t": "🟢 APROBADO: si no existen plagas cuarentenarias, el lote queda habilitado para exportación. No se requiere certificado de inspección colocado en cada pallet."
+    },
+    {
+     "t": "🔴 RECHAZADO – Brevipalpus chilensis: rechazo del lote + cambio de condición del SDP por el resto de la temporada. Para continuar exportando desde ese SDP se requiere bromuro de metilo."
+    },
+    {
+     "t": "🔴 OTRA PLAGA CUARENTENARIA VIVA: rechazo del lote. Para insistir con la exportación puede aplicarse bromuro de metilo o fosfina, según corresponda. Se permite segregar los SDP que no estén afectados."
+    },
+    {
+     "t": "8. TRATAMIENTOS"
+    },
+    {
+     "t": "Bromuro de metilo: exposición 2,5 horas, con dosis dependiente de la temperatura. Cada pallet tratado debe llevar certificado de fumigación."
+    },
+    {
+     "t": "Fosfina: concentración mínima 1.000 ppm; exposición de 5 días entre 16–20 °C o 4 días a ≥20 °C, más 2 días de ventilación."
+    },
+    {
+     "t": "9. DESPACHO"
+    },
+    {
+     "t": "☐ Lote aprobado o tratado según corresponda."
+    },
+    {
+     "t": "☐ Mantener trazabilidad hasta despacho."
+    },
+    {
+     "t": "☐ Contenedor consolidado."
+    },
+    {
+     "t": "☐ Sello oficial SAG en el contenedor."
+    },
+    {
+     "t": "☐ Emisión de Certificado Fitosanitario."
+    },
+    {
+     "t": "☐ Si hubo tratamiento, sus antecedentes deben quedar consignados en el Certificado Fitosanitario."
+    },
+    {
+     "t": "Antes de presentar cualquier lote, comprobar: SDP y su condición, CSP, CSG, trazabilidad, rotulación, condición física de la fruta y representación de SDP y variedades."
+    },
+    {
+     "t": "Con esta revisión se reducen los principales factores que pueden generar observaciones o rechazos durante la inspección SAG."
+    },
+    {
+     "t": "Con eso reduces los principales puntos que pueden generar una objeción o rechazo durante la inspección SAG."
+    }
+   ]
+  },
+  "kiwi-argentina": {
+   "especie": "Kiwi",
+   "mercado": "Argentina",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Presentación de AFIDI",
+     "d": "AFIDI"
+    },
+    {
+     "t": "NOTA IMPORTANTE"
+    },
+    {
+     "t": "Toda la información de la etiqueta debe estar en español."
+    }
+   ]
+  },
+  "kiwi-india": {
+   "especie": "Kiwi",
+   "mercado": "India",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Pegar la etiqueta de India antes de despachar."
+    },
+    {
+     "t": "Mosca de la fruta",
+     "d": "Radio de 7,2 km"
+    }
+   ]
+  },
+  "kiwi-mexico": {
+   "especie": "Kiwi",
+   "mercado": "México",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Sistema de Registro de Productores para Exportación SDP-USA",
+     "d": "SAG :: Sistema Registro SdP-USA",
+     "u": "https://sispusa.sag.gob.cl/pubsber/reporteSDPver3.asp"
+    },
+    {
+     "t": "Registro de SDP en Power BI",
+     "d": "Microsoft Power BI",
+     "u": "https://app.powerbi.com/view?r=eyJrIjoiOTA5YzZhNGUtNmQxZS00YzZjLWFkZjUtYWI1YTVkYmMzZTU5IiwidCI6Ijc3ZWNkYTc1LTU4NjQtNDIyYS1hNTM1LTZlYTY3MTU0MDI5YyIsImMiOjR9"
+    },
+    {
+     "t": "Certificación del muestreo de campo (SDP)",
+     "d": "Certificado emitido por el laboratorio"
+    },
+    {
+     "t": "Manejo fitosanitario",
+     "d": "Anexo entregado por el área de producción"
+    },
+    {
+     "t": "Aviso de proceso"
+    },
+    {
+     "t": "Sin aviso de proceso"
+    },
+    {
+     "t": "Fumigación con bromuro en origen",
+     "d": "Fumigación sin aviso OVO"
+    },
+    {
+     "t": "Sin inspección"
+    },
+    {
+     "t": "Solo despacho"
+    },
+    {
+     "t": "Informar la suspensión de la fumigación por correo, con copia a OVO."
+    }
+   ]
+  },
+  "kiwi-rusia": {
+   "especie": "Kiwi",
+   "mercado": "Rusia",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Anexos de aplicaciones",
+     "d": "Mantener numeración correlativa."
+    }
+   ]
+  },
+  "kiwi-usa": {
+   "especie": "Kiwi",
+   "mercado": "USA",
+   "cond": "",
+   "base": false,
+   "reqs": {},
+   "links": [],
+   "guia": [
+    {
+     "t": "SRA: CSG-CSP",
+     "u": "https://sra.sag.gob.cl/"
+    },
+    {
+     "t": "Sistema de Registro de Productores para Exportación SDP-USA",
+     "d": "SAG :: Sistema Registro SdP-USA",
+     "u": "https://sispusa.sag.gob.cl/pubsber/reporteSDPver3.asp"
+    },
+    {
+     "t": "NOTA IMPORTANTE"
+    },
+    {
+     "t": "Si se descuelga un SDP para USA, la medida no es retroactiva para la fruta aprobada en planta. Por lo tanto, toda la fruta ya aprobada puede despacharse a USA sin inconvenientes."
+    }
+   ]
+  }
+ },
+ "puertos": {
+  "SHANGHAI": "China",
+  "NANSHA": "China",
+  "GUANGZHOU": "China",
+  "SHENZHEN": "China",
+  "YANTIAN": "China",
+  "TIANJIN": "China",
+  "XINGANG": "China",
+  "DALIAN": "China",
+  "NINGBO": "China",
+  "QINGDAO": "China",
+  "XIAMEN": "China",
+  "ZHENGZHOU": "China",
+  "BEIJING": "China",
+  "CHENGDU": "China",
+  "BUSAN": "Corea",
+  "INCHEON": "Corea",
+  "SEOUL": "Corea",
+  "TOKYO": "Japón",
+  "YOKOHAMA": "Japón",
+  "OSAKA": "Japón",
+  "KOBE": "Japón",
+  "NARITA": "Japón",
+  "KAOHSIUNG": "Taiwán",
+  "KEELUNG": "Taiwán",
+  "TAIPEI": "Taiwán",
+  "HO CHI MINH": "Vietnam",
+  "HAIPHONG": "Vietnam",
+  "HANOI": "Vietnam",
+  "CAT LAI": "Vietnam",
+  "BANGKOK": "Tailandia",
+  "LAEM CHABANG": "Tailandia",
+  "SANTOS": "Brasil",
+  "SAO PAULO": "Brasil",
+  "GUARULHOS": "Brasil",
+  "PARANAGUA": "Brasil",
+  "ITAJAI": "Brasil",
+  "NAVEGANTES": "Brasil",
+  "RIO DE JANEIRO": "Brasil",
+  "PHILADELPHIA": "USA",
+  "LOS ANGELES": "USA",
+  "LONG BEACH": "USA",
+  "MIAMI": "USA",
+  "NEW YORK": "USA",
+  "WILMINGTON": "USA",
+  "PORT EVERGLADES": "USA",
+  "HOUSTON": "USA",
+  "SAN JUAN": "USA",
+  "GLOUCESTER": "USA",
+  "PORT HUENEME": "USA",
+  "SEATTLE": "USA",
+  "OAKLAND": "USA",
+  "VANCOUVER": "Canadá",
+  "TORONTO": "Canadá",
+  "MONTREAL": "Canadá",
+  "MANZANILLO": "México",
+  "LAZARO CARDENAS": "México",
+  "CIUDAD DE MEXICO": "México",
+  "MEXICO": "México",
+  "CALLAO": "Perú",
+  "LIMA": "Perú",
+  "TACNA": "Perú",
+  "GUAYAQUIL": "Ecuador",
+  "QUITO": "Ecuador",
+  "BUENAVENTURA": "Colombia",
+  "CARTAGENA": "Colombia",
+  "BOGOTA": "Colombia",
+  "BUENOS AIRES": "Argentina",
+  "MENDOZA": "Argentina",
+  "SAN PETERSBURGO": "Rusia",
+  "ST. PETERSBURG": "Rusia",
+  "ST PETERSBURG": "Rusia",
+  "NOVOROSSIYSK": "Rusia",
+  "MOSCU": "Rusia",
+  "VLADIVOSTOK": "Rusia",
+  "NHAVA SHEVA": "India",
+  "MUMBAI": "India",
+  "CHENNAI": "India",
+  "MUNDRA": "India",
+  "DELHI": "India",
+  "PARIS": "Francia",
+  "VNUKOVO": "Rusia",
+  "MOSCOW": "Rusia",
+  "JAKARTA": "Indonesia",
+  "PHNOM PENH": "Camboya",
+  "DUBAI": "Emiratos Árabes",
+  "JEBEL ALI": "Emiratos Árabes",
+  "MADRID": "España",
+  "BARCELONA": "España",
+  "ROTTERDAM": "Holanda",
+  "AMSTERDAM": "Holanda",
+  "LONDON": "Inglaterra",
+  "LONDRES": "Inglaterra",
+  "FRANKFURT": "Alemania",
+  "HONG KONG": "Hong Kong",
+  "SINGAPORE": "Singapur",
+  "SINGAPUR": "Singapur",
+  "KUALA LUMPUR": "Malasia",
+  "PORT KLANG": "Malasia",
+  "MANILA": "Filipinas",
+  "DOHA": "Qatar",
+  "JEDDAH": "Arabia Saudita",
+  "RIYADH": "Arabia Saudita",
+  "KUWAIT": "Kuwait"
+ },
+ "grupos": {
+  "Carozos": [
+   "Durazno",
+   "Nectarin",
+   "Ciruela",
+   "Plumcot",
+   "Pluot",
+   "Cherry plum",
+   "Damasco"
+  ],
+  "Cítricos": [
+   "Clementina",
+   "Mandarina",
+   "Naranja",
+   "Limón"
+  ],
+  "Pluot y Plumcot": [
+   "Pluot",
+   "Plumcot"
+  ],
+  "Clementinas": [
+   "Mandarina"
+  ]
+ },
+ "checks": {},
+ "asign": {},
+ "gruposActivos": [
+  "Despacho"
+ ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Control de requisitos SAG · C&L Fruit",
+  "short_name": "Requisitos SAG",
+  "description": "Requisitos SAG de exportación por despacho",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FAF6F1",
+  "theme_color": "#500015",
+  "lang": "es",
+  "icons": [
+    { "src": "icons/192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

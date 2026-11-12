@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control de requisitos SAG</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#500015">
+<link rel="icon" href="icons/192.png">
+<script src="lib/msal-browser.min.js"></script>
+<style>
+:root{
+  /* Layout: barra vino fija arriba, tablero de operación debajo; el estado se lee por color y forma */
+  --vino:#500015; --vino-2:#6d1226; --dorado:#D4A437; --crema:#FAF6F1; --papel:#ffffff;
+  --tinta:#2a1a1e; --suave:#75666a; --linea:#e7dccd;
+  --ok:#2e7d4f; --ok-bg:#e4f2e9; --warn:#a8690b; --warn-bg:#fbefd3; --crit:#b3261e; --crit-bg:#fbe3e1; --neutro-bg:#efe8de;
+  --fuente:Calibri,Carlito,"Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--crema);color:var(--tinta);font-family:var(--fuente);font-size:16px;line-height:1.35}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--dorado);outline-offset:2px}
+header{background:var(--vino);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:10px 20px;border-bottom:4px solid var(--dorado)}
+header h1{font-size:20px;margin:0;font-weight:700;letter-spacing:.2px}
+header h1 small{display:block;font-size:12px;font-weight:400;color:#e9d9b0;letter-spacing:.6px;text-transform:uppercase}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav a{color:#f3e7ea;text-decoration:none;padding:7px 14px;border-radius:6px;font-weight:700}
+nav a.on{background:var(--dorado);color:var(--vino)}
+nav a:hover:not(.on){background:var(--vino-2)}
+.quien{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:14px}
+.quien input{background:#fff;border:0;border-radius:6px;padding:6px 10px;width:170px;color:var(--tinta)}
+main{padding:18px 20px 60px;max-width:1500px;margin:0 auto}
+.aviso{background:var(--warn-bg);border-left:5px solid var(--warn);padding:10px 14px;border-radius:6px;margin-bottom:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:var(--papel);border:1px solid var(--linea);border-left:6px solid var(--suave);border-radius:8px;padding:12px 16px}
+.tile b{display:block;font-size:34px;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile span{color:var(--suave);font-size:14px}
+.tile.crit{border-left-color:var(--crit)} .tile.crit b{color:var(--crit)}
+.tile.warn{border-left-color:var(--warn)} .tile.warn b{color:var(--warn)}
+.tile.ok{border-left-color:var(--ok)} .tile.ok b{color:var(--ok)}
+.barra{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.barra .sp{flex:1}
+input[type=text],input[type=date],input[type=search],select,textarea{background:#fff;border:1px solid #cfc2b1;border-radius:6px;padding:7px 10px}
+textarea{width:100%;min-height:120px}
+.btn{background:var(--vino);color:#fff;border:0;border-radius:6px;padding:8px 16px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--vino-2)}
+.btn.sec{background:#fff;color:var(--vino);border:1px solid var(--vino)}
+.btn.sec:hover{background:#f6ecee}
+.btn.oro{background:var(--dorado);color:var(--vino)}
+.btn.pel{background:#fff;color:var(--crit);border:1px solid var(--crit)}
+.btn.chico{padding:4px 10px;font-size:14px}
+.tabla{overflow-x:auto;background:var(--papel);border:1px solid var(--linea);border-radius:8px}
+table{border-collapse:collapse;width:100%}
+th{background:var(--vino);color:#fff;text-align:left;font-size:14px;padding:9px 12px;white-space:nowrap}
+td{padding:10px 12px;border-top:1px solid var(--linea);vertical-align:middle}
+tr.fila{cursor:pointer}
+tr.fila:hover td{background:#fbf3e2}
+tr.fila td:first-child{border-left:6px solid transparent}
+tr.e-crit td:first-child{border-left-color:var(--crit)}
+tr.e-warn td:first-child{border-left-color:var(--warn)}
+tr.e-ok td:first-child{border-left-color:var(--ok)}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:700;white-space:nowrap}
+.p-crit{background:var(--crit);color:#fff} .p-warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn)}
+.p-ok{background:var(--ok);color:#fff} .p-neutro{background:var(--neutro-bg);color:var(--suave)}
+.chip{display:inline-block;background:var(--crit-bg);color:var(--crit);border-radius:4px;padding:2px 7px;font-size:13px;margin:2px 4px 2px 0}
+.chip.mas{background:var(--neutro-bg);color:var(--suave)}
+.avance{display:flex;align-items:center;gap:8px;min-width:150px}
+.avance i{flex:1;height:10px;background:var(--neutro-bg);border-radius:5px;overflow:hidden;display:block}
+.avance i em{display:block;height:100%;background:var(--ok)}
+.vacio{padding:28px;text-align:center;color:var(--suave)}
+.dos{display:grid;grid-template-columns:330px 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.dos{grid-template-columns:1fr}.quien{margin-left:0}}
+.lista{display:flex;flex-direction:column;gap:6px}
+.item{background:var(--papel);border:1px solid var(--linea);border-left:6px solid var(--suave);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left;width:100%}
+.item.on{outline:2px solid var(--vino);background:#fff8ea}
+.item.e-crit{border-left-color:var(--crit)}.item.e-warn{border-left-color:var(--warn)}.item.e-ok{border-left-color:var(--ok)}
+.item b{display:block}.item span{font-size:14px;color:var(--suave)}
+.panel{background:var(--papel);border:1px solid var(--linea);border-radius:8px;padding:16px 18px}
+.panel h2{margin:0 0 2px;font-size:24px;color:var(--vino)}
+.meta{color:var(--suave);margin-bottom:10px}
+.grupo{margin-top:18px}
+.grupo h3{margin:0 0 6px;font-size:14px;text-transform:uppercase;letter-spacing:.8px;color:var(--vino);border-bottom:2px solid var(--dorado);padding-bottom:3px}
+.req{display:flex;align-items:center;gap:12px;padding:8px 6px;border-bottom:1px solid var(--linea)}
+.req .caja{width:34px;height:34px;flex:none;border-radius:7px;border:2px solid var(--crit);background:var(--crit-bg);cursor:pointer;font-size:20px;font-weight:700;color:#fff;line-height:1;padding:0}
+.req.ok .caja{background:var(--ok);border-color:var(--ok)}
+.req.na .caja{background:var(--neutro-bg);border-color:#b9ab98;color:var(--suave);font-size:12px}
+.req .txt{flex:1;min-width:0}
+.req .txt b{display:block}
+.req.ok .txt b,.req.na .txt b{color:var(--suave);font-weight:400}
+.req .det{display:inline-block;background:#fbf0d0;border:1px solid #ecd58f;border-radius:4px;padding:1px 7px;font-size:14px;margin-top:2px}
+.req .por{font-size:13px;color:var(--suave);text-align:right;white-space:nowrap}
+.acciones{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.links a,.guia a{color:var(--vino);font-weight:700}
+details.guia{margin-top:18px;background:var(--crema);border:1px solid var(--linea);border-radius:8px;padding:10px 14px}
+details.guia summary{cursor:pointer;font-weight:700;color:var(--vino)}
+.guia dl{margin:8px 0 0;display:grid;grid-template-columns:minmax(140px,280px) 1fr;gap:4px 14px;font-size:15px}
+.guia dt{font-weight:700}.guia dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:600px){.guia dl{grid-template-columns:1fr}}
+.sub{display:flex;gap:6px;margin-bottom:14px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px;margin:10px 0}
+.form label{display:flex;flex-direction:column;gap:3px;font-size:14px;color:var(--suave)}
+.form label.ancho{grid-column:1/-1}
+.form label.fila{flex-direction:row;align-items:center;gap:8px;color:var(--tinta);font-size:16px}
+.mreq td{padding:5px 10px}.mreq input[type=text]{width:100%}
+.mreq input[type=checkbox],.form input[type=checkbox]{width:20px;height:20px;accent-color:var(--vino)}
+.mreq tr.gr td{background:var(--neutro-bg);font-weight:700;color:var(--vino);font-size:14px;text-transform:uppercase;letter-spacing:.6px}
+h4{margin:16px 0 6px;color:var(--vino)}
+#modal{position:fixed;inset:0;background:rgba(42,26,30,.55);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:10}
+#modal.on{display:flex}
+#modal .panel{max-width:720px;width:100%}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:8px;display:none;z-index:20;max-width:90vw}
+.ej{background:var(--dorado);color:var(--vino);border-radius:4px;font-size:11px;font-weight:700;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.sec2{color:var(--suave);font-size:14px}
+.resp{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.resp span{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--linea);border-radius:5px;padding:2px 4px 2px 8px;font-size:14px;max-width:100%}
+.resp a{color:var(--vino);font-weight:700;overflow-wrap:anywhere}
+.resp button{border:0;background:none;color:var(--crit);cursor:pointer;font-weight:700;padding:2px 6px;border-radius:4px}
+.resp button:hover{background:var(--crit-bg)}
+.req{flex-wrap:wrap}.req .txt{min-width:220px}
+.clip{color:var(--suave);font-size:13px;white-space:nowrap}
+.asig{background:var(--crema);border:1px solid var(--linea);border-radius:6px;padding:8px 12px}
+.asig label,.aviso label{margin-right:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Control de requisitos SAG<small>C&amp;L Fruit · despachos de exportación</small></h1>
+  <nav id="nav"></nav>
+  <label class="quien" for="nombre">Responsable <input type="text" id="nombre" data-b="nombre" placeholder="Tu nombre" autocomplete="off"></label>
+</header>
+<main id="app"><div class="vacio">Cargando datos…</div></main>
+<input type="file" id="archivo" multiple hidden>
+<input type="file" id="importar" accept=".json" hidden>
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const urlOk=u=>/^https?:\/\//i.test(String(u||'').trim())?String(u).trim():'';
+const N=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+const NE=s=>{let x=N(s);if(/[^AEIOU]ES$/.test(x))x=x.slice(0,-2);else if(/S$/.test(x))x=x.slice(0,-1);return x};
+const slug=s=>N(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const fFecha=f=>f?f.split('-').reverse().join('-'):'sin fecha';
+const hoy=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fHora=iso=>{if(!iso)return'';const d=new Date(iso);if(isNaN(d))return'';const p=n=>String(n).padStart(2,'0');return p(d.getDate())+'-'+p(d.getMonth()+1)+' '+p(d.getHours())+':'+p(d.getMinutes())};
+const miles=n=>String(Math.round(n||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const GRUPOS=['Documentos','Res. 6510','Despacho'];
+const VISTAS=[['seguimiento','Seguimiento'],['checklist','Checklist'],['mantenedor','Mantenedor']];
+const ALIAS_PAIS={'ESTADOS UNIDOS':'USA','EEUU':'USA','EE.UU.':'USA','UNITED STATES':'USA','COREA DEL SUR':'Corea','REPUBLICA DE COREA':'Corea','KOREA':'Corea','BRAZIL':'Brasil','JAPAN':'Japón','FEDERACION RUSA':'Rusia','RUSSIA':'Rusia'};
+
+const VIAS=['Marítimo','Aéreo','Terrestre','Chárter'];
+const S={v:0,gruposActivos:['Despacho'],cat:[],mer:{},puertos:{},grupos:{},checks:{},asign:{},despachos:[],sdt:{},listo:false,aviso:'',
+  vista:'seguimiento',sel:null,f:{q:'',esp:'',desp:false},mt:{tab:'mercados',sel:null,d:null,cat:null,grupos:null},conf:null,nombre:''};
+try{S.nombre=localStorage.getItem('sag_nombre')||''}catch(e){}
+$('#nombre').value=S.nombre;
+
+/* ---------- lógica de requisitos ---------- */
+function nomMer(m){return m?m.especie+' / '+m.mercado+(m.cond?' ('+m.cond+')':''):'—'}
+const paises=()=>[...new Set([...Object.values(S.mer).filter(m=>!m.base).map(m=>m.mercado),...Object.values(S.puertos)])].sort((a,b)=>a.localeCompare(b,'es'));
+function calce(mEsp,dEsp){ // 2 = misma especie, 1 = la especie pertenece al grupo del mercado
+  if(NE(mEsp)===NE(dEsp))return 2;
+  for(const g in S.grupos) if(NE(g)===NE(mEsp)&&(S.grupos[g]||[]).some(x=>NE(x)===NE(dEsp)))return 1;
+  return 0;
+}
+function paisDe(d){
+  const p=S.puertos[N(d.puerto)]; if(p)return p;
+  if(d.pais){const a=ALIAS_PAIS[N(d.pais)]; if(a)return a; const m=paises().find(x=>N(x)===N(d.pais)); if(m)return m}
+  return '';
+}
+function resolver(d){
+  const pais=paisDe(d), partes=[], r={};
+  for(const esp of (d.especies&&d.especies.length?d.especies:['(sin especie)'])){
+    const todos=Object.entries(S.mer).filter(([k,m])=>!m.base&&calce(m.especie,esp)>0);
+    const ov=(S.asign[d.id]||{})[esp];
+    const p={esp,pais,opciones:todos.map(x=>x[0]),mid:null,estado:'ok'};
+    if(ov&&S.mer[ov]) p.mid=ov;
+    else if(!pais) p.estado='sinpais';
+    else{
+      const c=todos.filter(([k,m])=>N(m.mercado)===N(pais)), ex=c.filter(([k,m])=>calce(m.especie,esp)===2), pool=ex.length?ex:c;
+      const firma=k=>JSON.stringify(S.cat.filter(c=>c.id in (S.mer[k].reqs||{})&&S.gruposActivos.includes(c.g)).map(c=>[c.id,S.mer[k].reqs[c.id]]));
+      if(pool.length===1||(pool.length>1&&pool.every(x=>firma(x[0])===firma(pool[0][0])))){p.mid=pool[0][0];p.gen=pool.length>1} else if(pool.length>1){p.estado='elegir';p.sug=pool.map(x=>x[0])} else p.estado=Object.values(S.mer).some(b=>b.base&&calce(b.especie,esp)>0)?'base':'sinreq';
+    }
+    for(const k in S.mer){const b=S.mer[k]; if(b.base&&calce(b.especie,esp)>0)Object.assign(r,b.reqs||{})}
+    if(p.mid)Object.assign(r,S.mer[p.mid].reqs||{});
+    partes.push(p);
+  }
+  return {pais,partes,reqs:S.cat.filter(c=>c.id in r&&S.gruposActivos.includes(c.g)&&(!c.via||N(c.via)===N(d.tipoNave))).map(c=>({id:c.id,n:c.n,g:c.g,v:r[c.id]===true?'':String(r[c.id])}))};
+}
+function estado(d){
+  const R=resolver(d), ch=S.checks[d.id]||{};
+  const falta=R.reqs.filter(r=>!(ch[r.id]&&(ch[r.id].s==='ok'||ch[r.id].s==='na')));
+  const o={R,rs:R.reqs,falta,total:R.reqs.length,hechos:R.reqs.length-falta.length};
+  const prob=R.partes.find(p=>p.estado!=='ok'&&p.estado!=='base');
+  if(d.cargado) return Object.assign(o,!o.total&&!prob?{t:'Despachado',c:'neutro'}:falta.length?{t:'Despachado · faltaron '+falta.length,c:'crit'}:{t:'Despachado',c:'neutro'});
+  if(prob) return Object.assign(o,{t:prob.estado==='sinpais'?'Asignar país al puerto':prob.estado==='elegir'?'Elegir condición':'Sin requisitos definidos',c:'warn',prob:true});
+  if(!o.total) return Object.assign(o,{t:'Sin requisitos de despacho',c:'neutro'});
+  if(!falta.length) return Object.assign(o,{t:'Listo para despachar',c:'ok'});
+  const h=hoy();
+  if(d.fecha<h) return Object.assign(o,{t:'Atrasado · faltan '+falta.length,c:'crit'});
+  if(d.fecha===h) return Object.assign(o,{t:'Hoy · faltan '+falta.length,c:'crit'});
+  return Object.assign(o,{t:'Faltan '+falta.length,c:'warn'});
+}
+const todos=()=>S.despachos.map(d=>({id:d.id,d,e:estado(d)}));
+function mercadoTxt(x){return x.e.R.partes.map(p=>p.mid?(p.gen?S.mer[p.mid].especie+' / '+S.mer[p.mid].mercado:nomMer(S.mer[p.mid])):p.esp+' / '+(p.pais||x.d.puerto||'¿país?')).join(' + ')}
+function filtrados(){
+  const q=S.f.q.trim().toLowerCase();
+  return todos().filter(x=>{
+    if(!S.f.desp&&x.d.cargado&&!x.e.falta.length) return false;
+    if(S.f.esp&&!(x.d.especies||[]).some(e=>NE(e)===NE(S.f.esp))) return false;
+    if(q&&!(x.d.codnave+' '+x.d.planilla+' '+mercadoTxt(x)+' '+x.d.puerto+' '+x.d.recibidor+' '+x.d.nave).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+const nResp=id=>Object.values(S.checks[id]||{}).reduce((n,c)=>n+(c.archivos||[]).length,0);
+const especiesSDT=()=>[...new Set(S.despachos.flatMap(d=>d.especies||[]))].sort((a,b)=>a.localeCompare(b,'es'));
+
+/* ---------- datos: SharePoint por Microsoft Graph (o memoria en modo demo) ---------- */
+const CFG={clientId:'10fd9db5-58cc-4b64-b3a9-ad33ab097b51',tenantId:'5946134b-9789-4d13-86c4-e01684301b6a',scopes:['Sites.ReadWrite.All','User.Read'],
+  sitio:'https://cylfruit.sharepoint.com/sites/EXPORTADORACYL',carpeta:'APP REQUISITOS EXPORTACION/Respaldos',
+  repo:'TomasCyL/Requisitos-sag',flujo:'sincronizar.yml',cadaSeg:10};
+const LISTAS={RQ_Datos:'Valor',RQ_Mercados:'Datos',RQ_Checks:'Datos'};   // lista → columna con el JSON
+const DEMO=/[?&]demo\b/.test(location.search);
+const J=(t,d)=>{try{return t?JSON.parse(t):d}catch(e){return d}};
+
+const Nube={ // Microsoft Graph con la cuenta Microsoft de cada persona
+  _m:null,_c:null,_sid:null,_l:null,
+  async msal(){
+    if(this._m)return this._m;
+    if(!window.msal)throw new Error('No se cargó la librería de inicio de sesión.');
+    const base=location.origin+location.pathname.replace(/[^/]*$/,'');
+    this._m=new msal.PublicClientApplication({auth:{clientId:CFG.clientId,authority:'https://login.microsoftonline.com/'+CFG.tenantId,redirectUri:base,navigateToLoginRequestUrl:false},cache:{cacheLocation:'localStorage'}});
+    await this._m.initialize();
+    const r=await this._m.handleRedirectPromise();
+    this._c=(r&&r.account)||this._m.getAllAccounts()[0]||null;
+    return this._m;
+  },
+  async sesion(){await this.msal();return !!this._c},
+  async entrar(){const m=await this.msal();await m.loginRedirect({scopes:CFG.scopes})},
+  async salir(){const m=await this.msal();await m.logoutRedirect({account:this._c})},
+  async token(){
+    const m=await this.msal();
+    try{return (await m.acquireTokenSilent({scopes:CFG.scopes,account:this._c})).accessToken}
+    catch(e){await m.acquireTokenRedirect({scopes:CFG.scopes,account:this._c});return new Promise(()=>{})}
+  },
+  async g(path,{method='GET',body,headers={},crudo}={}){
+    const url=path.startsWith('http')?path:'https://graph.microsoft.com/v1.0'+path;
+    const h={Authorization:'Bearer '+await this.token(),Accept:'application/json',...headers};
+    if(body!==undefined&&!crudo)h['Content-Type']='application/json';
+    const r=await fetch(url,{method,headers:h,body:body===undefined?undefined:crudo?body:JSON.stringify(body)});
+    if(r.status===204)return null;
+    const t=await r.text(), j=J(t,null);
+    if(!r.ok){const e=new Error((j&&j.error&&j.error.message)||('Error '+r.status));e.status=r.status;throw e}
+    return j;
+  },
+  async sid(){
+    if(this._sid)return this._sid;
+    const m=/^https:\/\/([^\/]+)(\/.*)?$/.exec(CFG.sitio);
+    this._sid=(await this.g(`/sites/${m[1]}:${m[2]||'/'}`)).id;return this._sid;
+  },
+  async listas(){
+    if(this._l)return this._l;
+    const sid=await this.sid(), j=await this.g(`/sites/${sid}/lists?$select=id,displayName&$top=200`), l={};
+    for(const x of j.value)l[x.displayName]=x.id;
+    for(const [n,col] of Object.entries(LISTAS)) if(!l[n]){ // primera vez: crea la lista
+      const c=await this.g(`/sites/${sid}/lists`,{method:'POST',body:{displayName:n,description:'Control de requisitos SAG',columns:[{name:col,text:{allowMultipleLines:true,textType:'plain',maxLength:0}}],list:{template:'genericList'}}});
+      l[n]=c.id;
+    }
+    return this._l=l;
+  },
+  async usuario(){try{const u=await this.g('/me?$select=displayName');return u.displayName||''}catch(e){return ''}},
+  async items(lista){ // → [{id,etag,t,v}]
+    const sid=await this.sid(), lid=(await this.listas())[lista], col=LISTAS[lista], out=[];
+    let url=`/sites/${sid}/lists/${lid}/items?$expand=fields($select=Title,${col})&$top=999`;
+    while(url){const j=await this.g(url);for(const it of j.value)out.push({id:it.id,etag:it.eTag||'',t:(it.fields||{}).Title,v:(it.fields||{})[col]||''});url=j['@odata.nextLink']||null}
+    return out;
+  },
+  async leer(lista,id){
+    const sid=await this.sid(), lid=(await this.listas())[lista], col=LISTAS[lista];
+    const it=await this.g(`/sites/${sid}/lists/${lid}/items/${id}?$expand=fields($select=Title,${col})`);
+    return {id:it.id,etag:it.eTag||'',t:(it.fields||{}).Title,v:(it.fields||{})[col]||''};
+  },
+  async crear(lista,titulo,texto){
+    const sid=await this.sid(), lid=(await this.listas())[lista];
+    const it=await this.g(`/sites/${sid}/lists/${lid}/items`,{method:'POST',body:{fields:{Title:titulo,[LISTAS[lista]]:texto}}});
+    return {id:it.id,etag:it.eTag||''};
+  },
+  async cambiar(lista,id,texto,etag){ // si etag no calza (otra persona guardó antes) → error con status 412
+    const sid=await this.sid(), lid=(await this.listas())[lista];
+    await this.g(`/sites/${sid}/lists/${lid}/items/${id}/fields`,{method:'PATCH',body:{[LISTAS[lista]]:texto},headers:etag?{'If-Match':etag}:{}});
+  },
+  async borrar(lista,id){const sid=await this.sid(), lid=(await this.listas())[lista];await this.g(`/sites/${sid}/lists/${lid}/items/${id}`,{method:'DELETE'})},
+  async subir(ruta,archivo){ // → {id,url,kb}
+    const sid=await this.sid(), p=(CFG.carpeta+'/'+ruta).split('/').map(encodeURIComponent).join('/');
+    const j=await this.g(`/sites/${sid}/drive/root:/${p}:/content?@microsoft.graph.conflictBehavior=rename`,{method:'PUT',body:archivo,crudo:true,headers:{'Content-Type':'application/octet-stream'}});
+    return {id:j.id,url:j.webUrl,kb:Math.max(1,Math.round((j.size||archivo.size)/1024))};
+  },
+  async quitarArchivo(id){const sid=await this.sid();try{await this.g(`/sites/${sid}/drive/items/${id}`,{method:'DELETE'})}catch(e){if(e.status!==404)throw e}}
+};
+
+const Memoria={ // modo demo (?demo): nada se guarda ni sale del navegador
+  d:{RQ_Datos:[],RQ_Mercados:[],RQ_Checks:[]},n:0,
+  async sesion(){return true}, async usuario(){return ''}, async salir(){},
+  async items(l){return this.d[l].map(x=>({...x}))},
+  async leer(l,id){return {...this.d[l].find(x=>x.id===id)}},
+  async crear(l,t,v){const it={id:String(++this.n),etag:'1',t,v};this.d[l].push(it);return {id:it.id,etag:'1'}},
+  async cambiar(l,id,v,etag){const it=this.d[l].find(x=>x.id===id);if(etag&&etag!==it.etag){const e=new Error('conflicto');e.status=412;throw e}it.v=v;it.etag=String(+it.etag+1)},
+  async borrar(l,id){this.d[l]=this.d[l].filter(x=>x.id!==id)},
+  async subir(ruta,a){return {id:'demo'+(++this.n),url:URL.createObjectURL(a),kb:Math.max(1,Math.round(a.size/1024))}},
+  async quitarArchivo(){}
+};
+const B=DEMO?Memoria:Nube;
+const IDS={RQ_Datos:new Map(),RQ_Mercados:new Map(),RQ_Checks:new Map()};  // título → id del ítem
+let huella='';
+
+async function cargar(){
+  const [da,me,ch]=await Promise.all([B.items('RQ_Datos'),B.items('RQ_Mercados'),B.items('RQ_Checks')]);
+  const h=JSON.stringify([da,me,ch].map(l=>l.map(x=>x.id+x.etag)));
+  for(const [n,l] of [['RQ_Datos',da],['RQ_Mercados',me],['RQ_Checks',ch]]){IDS[n].clear();for(const x of l)if(x.t&&!IDS[n].has(x.t))IDS[n].set(x.t,x.id)}
+  if(h===huella&&S.listo)return false; huella=h;
+  const D={};for(const x of da)if(!(x.t in D))D[x.t]=J(x.v,null);
+  const cat=D.cat||{};
+  S.cat=cat.items||[]; S.gruposActivos=cat.gruposActivos||['Despacho']; S.puertos=D.puertos||{}; S.grupos=D.grupos||{};
+  S.despachos=D.despachos||[]; S.sdt=Object.assign({demo:DEMO},D.sdt||{}); S.github=!!(D.github&&D.github.token); S._gh=D.github||{};
+  S.sinMatriz=!D.cat;
+  S.mer={};for(const x of me){const d=J(x.v,null);if(d&&x.t)S.mer[x.t]=d}
+  S.checks={};S.asign={};
+  for(const x of ch){const d=J(x.v,null);if(!d||!x.t)continue;const o=S.checks[x.t]=Object.assign(S.checks[x.t]||{},d);if(o._asign){S.asign[x.t]=Object.assign(S.asign[x.t]||{},o._asign);delete o._asign}}
+  S.listo=true;S.aviso='';return true;
+}
+async function guardarDato(clave,valor){
+  const t=JSON.stringify(valor), id=IDS.RQ_Datos.get(clave);
+  if(id)await B.cambiar('RQ_Datos',id,t);else IDS.RQ_Datos.set(clave,(await B.crear('RQ_Datos',clave,t)).id);
+}
+async function modificar(lista,titulo,fn){ // leer lo último → aplicar el cambio → guardar; reintenta si otra persona guardó entremedio
+  for(let i=0;i<4;i++){
+    const id=IDS[lista].get(titulo);
+    if(!id){const o={};fn(o);IDS[lista].set(titulo,(await B.crear(lista,titulo,JSON.stringify(o))).id);return}
+    const it=await B.leer(lista,id), o=J(it.v,{})||{}; fn(o);
+    try{await B.cambiar(lista,id,JSON.stringify(o),it.etag);return}catch(e){if(e.status!==412&&e.status!==409)throw e}
+  }
+  throw new Error('No se pudo guardar: otra persona está guardando el mismo despacho. Intenta de nuevo.');
+}
+const ahoraISO=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds())};
+const ACC={
+  '/api/check':async b=>{const v={s:b.s,by:b.by||'',at:ahoraISO()};
+    S.checks[b.id]=S.checks[b.id]||{};S.checks[b.id][b.rid]=Object.assign({},S.checks[b.id][b.rid],v);render();
+    await modificar('RQ_Checks',b.id,o=>{o[b.rid]=Object.assign({},o[b.rid],v)})},
+  '/api/condicion':async b=>modificar('RQ_Checks',b.id,o=>{o._asign=o._asign||{};if(b.mercadoId)o._asign[b.especie]=b.mercadoId;else delete o._asign[b.especie]}),
+  '/api/puerto':async b=>modificar('RQ_Datos','puertos',o=>{if(b.pais)o[N(b.puerto)]=b.pais;else delete o[N(b.puerto)]}),
+  '/api/grupos':async b=>guardarDato('grupos',b.grupos),
+  '/api/catalogo':async b=>guardarDato('cat',{items:b.items,gruposActivos:b.gruposActivos||S.gruposActivos}),
+  '/api/mercado':async b=>{const t=JSON.stringify(b.doc),id=IDS.RQ_Mercados.get(b.id);if(id)await B.cambiar('RQ_Mercados',id,t);else IDS.RQ_Mercados.set(b.id,(await B.crear('RQ_Mercados',b.id,t)).id)},
+  '/api/mercado_borrar':async b=>{const id=IDS.RQ_Mercados.get(b.id);if(id)await B.borrar('RQ_Mercados',id)},
+  '/api/respaldo_borrar':async b=>{await B.quitarArchivo(b.f);await modificar('RQ_Checks',b.id,o=>{if(o[b.rid])o[b.rid].archivos=(o[b.rid].archivos||[]).filter(a=>a.f!==b.f)})},
+  '/api/github':async b=>guardarDato('github',{token:b.token}),
+  '/api/sincronizar':async()=>{
+    if(DEMO)throw new Error('En modo demo no se lee SDT.');
+    const tk=(S._gh||{}).token; if(!tk)throw new Error('Falta la llave de GitHub: se guarda una vez en Mantenedor → Conexión SDT.');
+    const r=await fetch(`https://api.github.com/repos/${CFG.repo}/actions/workflows/${CFG.flujo}/dispatches`,{method:'POST',headers:{Authorization:'Bearer '+tk,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},body:JSON.stringify({ref:'main'})});
+    if(r.status!==204)throw new Error(r.status===401||r.status===403?'GitHub rechazó la llave guardada (vencida o sin permiso de Actions).':'GitHub respondió '+r.status+' al pedir la lectura.');
+    S.pidio=Date.now();
+  }
+};
+async function enviar(ruta,cuerpo,okMsg){
+  try{
+    await ACC[ruta](cuerpo||{});
+    huella='';await cargar();render();if(okMsg)toast(okMsg);return true;
+  }catch(e){toast(e&&e.message?e.message:'No se pudo guardar. Intenta de nuevo.');huella='';try{await cargar()}catch(x){}render();return false}
+}
+async function sondear(){
+  try{if(await cargar())render();else if(S.aviso){S.aviso='';render()}}
+  catch(e){if(!S.aviso){S.aviso='Sin conexión con SharePoint. Se sigue intentando.';render()}}
+  setTimeout(sondear,(S.pidio&&Date.now()-S.pidio<180000?5:CFG.cadaSeg)*1000);
+}
+async function sembrar(e){ // primera vez: carga la matriz (semilla.json o el estado.json de la versión local)
+  S.sembrando='Cargando la matriz…';render();
+  try{
+    const cat=e.cat||[], mer=e.mer||{};
+    if(!cat.length||!Object.keys(mer).length)throw new Error('El archivo no trae la matriz de requisitos.');
+    let n=0;for(const [k,m] of Object.entries(mer)){S.sembrando='Cargando mercados… '+(++n)+' de '+Object.keys(mer).length;render();await ACC['/api/mercado']({id:k,doc:m})}
+    await guardarDato('puertos',e.puertos||{});await guardarDato('grupos',e.grupos||{});
+    for(const [id,o] of Object.entries(e.checks||{})){const d=Object.assign({},o);if((e.asign||{})[id])d._asign=e.asign[id];for(const r in d)if(d[r]&&d[r].archivos)delete d[r].archivos;await modificar('RQ_Checks',id,x=>Object.assign(x,d))}
+    await guardarDato('cat',{items:cat,gruposActivos:e.gruposActivos||['Despacho']});
+    toast('Matriz cargada.');
+  }catch(x){toast(x.message||'No se pudo cargar la matriz.')}
+  S.sembrando='';huella='';try{await cargar()}catch(x){}render();
+}
+async function iniciar(){
+  ruta();
+  try{
+    if(!(await B.sesion())){S.sinSesion=true;render();return}
+    if(!S.nombre&&!DEMO){const u=await B.usuario();if(u){S.nombre=u;$('#nombre').value=u}}
+    if(DEMO){
+      const e=await fetch('semilla.json').then(r=>r.json()), h=new Date(), f=(d,hh)=>{const x=new Date(h.getFullYear(),h.getMonth(),h.getDate()+d);return [x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'),hh]};
+      const o=(d,hh,cn,pl,tn,pu,es,ca,cg)=>{const [fe,ho]=f(d,hh);return {id:cn+'-'+pl,codnave:cn,planilla:String(pl),fecha:fe,hora:ho,tipoNave:tn,puerto:pu,naviera:'MSC',nave:'NAVE DE MUESTRA',recibidor:'Recibidor de muestra',transportista:'Transporte de muestra',especies:[es],cajas:ca,cargado:!!cg}};
+      await guardarDato('despachos',[o(-1,'10:00','A0201',301,'Aéreo','SHANGHAI','CEREZAS',2400,1),o(0,'09:00','A0202',302,'Aéreo','ZHENGZHOU','CEREZAS',2400),o(0,'15:00','M0203',303,'Marítimo','NANSHA','CEREZAS',4800),o(0,'21:00','M0204',304,'Marítimo','INCHEON','CEREZAS',4800),o(1,'11:00','M0205',305,'Marítimo','SANTOS','CIRUELAS',3600),o(1,'16:00','A0206',306,'Aéreo','TOKYO','CEREZAS',1200),o(2,'12:00','M0207',307,'Marítimo','PUERTO NUEVO','CEREZAS',4800),o(3,'10:00','A0208',308,'Aéreo','MIAMI','CEREZAS',600)]);
+      await guardarDato('sdt',{ok:true,at:'datos de muestra',error:'',columnas:[]});
+      await sembrar(e);
+    }
+    sondear();
+  }catch(e){S.aviso='No se pudo conectar: '+(e.message||e);render();setTimeout(iniciar,15000)}
+}
+let tT;function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(tT);tT=setTimeout(()=>t.style.display='none',4200)}
+
+/* ---------- vistas ---------- */
+function barraSDT(){
+  const s=S.sdt||{};
+  if(DEMO) return `<div class="aviso">Modo demo: los despachos son datos de muestra y nada de lo que marques se guarda.</div>`;
+  if(s.ok===false&&s.error) return `<div class="aviso">El último intento de leer SDT falló (${esc(s.intento||'')}): ${esc(s.error)}</div>`;
+  if(!s.at) return `<div class="aviso">Todavía no llega la primera lectura de SDT. La hace el robot de GitHub cada 10 minutos, o al pedirla en Mantenedor → Conexión SDT.</div>`;
+  return '';
+}
+function vSeguimiento(){
+  const T=todos().filter(x=>!x.d.cargado), L=filtrados();
+  const n=c=>T.filter(x=>x.e.c===c&&!x.e.prob).length, np=T.filter(x=>x.e.prob).length;
+  let h=`<div class="tiles">
+    <div class="tile"><b>${T.length}</b><span>Despachos por salir</span></div>
+    <div class="tile crit"><b>${n('crit')}</b><span>Con faltantes para hoy o atrasados</span></div>
+    <div class="tile warn"><b>${n('warn')}</b><span>Con faltantes, fecha futura</span></div>
+    <div class="tile ok"><b>${n('ok')}</b><span>Listos para despachar</span></div>
+    ${np?`<div class="tile warn"><b>${np}</b><span>Por revisar mercado o condición</span></div>`:''}</div>
+  <div class="barra">
+    <input type="search" id="fq" data-b="f.q" placeholder="Buscar orden, mercado, puerto, recibidor…" value="${esc(S.f.q)}" style="min-width:280px">
+    <select id="fesp" data-b="f.esp" aria-label="Especie"><option value="">Todas las especies</option>${especiesSDT().map(e=>`<option ${e===S.f.esp?'selected':''}>${esc(e)}</option>`).join('')}</select>
+    <label><input type="checkbox" id="fdesp" data-b="f.desp" ${S.f.desp?'checked':''}> Mostrar despachados completos</label>
+    <span class="sp"></span><span class="meta" style="margin:0">SDT: ${esc((S.sdt||{}).at||'sin leer')}</span></div>`;
+  if(!L.length) return h+`<div class="tabla"><div class="vacio">${S.despachos.length?'Ningún despacho coincide con el filtro.':'No hay órdenes de embarque en la ventana de fechas.'}</div></div>`;
+  h+=`<div class="tabla"><table><thead><tr><th>Carga</th><th>Orden</th><th>Especie / mercado</th><th>Vía · puerto</th><th>Recibidor</th><th>Avance</th><th>Qué falta</th><th>Estado</th></tr></thead><tbody>`;
+  for(const x of L){
+    const d=x.d, pct=x.e.total?Math.round(100*x.e.hechos/x.e.total):0;
+    const ch=x.e.falta.slice(0,3).map(r=>`<span class="chip">${esc(r.n)}</span>`).join('')+(x.e.falta.length>3?`<span class="chip mas">+${x.e.falta.length-3} más</span>`:'');
+    h+=`<tr class="fila e-${x.e.c}" data-a="abrir" data-id="${esc(x.id)}" tabindex="0">
+      <td class="num"><b>${fFecha(d.fecha)}</b>${d.hora?'<br>'+esc(d.hora):''}</td>
+      <td><b>${esc(d.codnave||'s/n')}</b><br><span class="sec2">Planilla ${esc(d.planilla)} · ${miles(d.cajas)} cajas</span></td>
+      <td>${esc(mercadoTxt(x))}</td><td>${esc(d.tipoNave)}<br><span class="sec2">${esc(d.puerto||'—')}</span></td><td>${esc(d.recibidor||'—')}</td>
+      <td><div class="avance"><i><em style="width:${pct}%"></em></i><span class="num">${x.e.hechos}/${x.e.total}</span></div>${nResp(d.id)?`<span class="clip">${nResp(d.id)} respaldo${nResp(d.id)>1?'s':''}</span>`:''}</td>
+      <td>${ch||'<span class="sec2">—</span>'}</td>
+      <td><span class="pill p-${x.e.c}">${esc(x.e.t)}</span></td></tr>`;
+  }
+  return h+'</tbody></table></div>';
+}
+
+function vChecklist(){
+  const L=todos().filter(x=>S.f.desp||!x.d.cargado||x.e.falta.length||x.id===S.sel);
+  if(!L.length) return `<div class="panel vacio">No hay despachos abiertos en la ventana de fechas.</div>`;
+  if(!S.sel||!L.some(y=>y.id===S.sel)) S.sel=L[0].id;
+  const x=L.find(y=>y.id===S.sel), d=x.d, ch=S.checks[d.id]||{};
+  let izq=`<div><div class="barra"><label><input type="checkbox" id="fdesp" data-b="f.desp" ${S.f.desp?'checked':''}> Ver despachados completos</label></div><div class="lista">`;
+  for(const y of L) izq+=`<button class="item e-${y.e.c} ${y.id===x.id?'on':''}" data-a="sel" data-id="${esc(y.id)}"><b>${esc(y.d.codnave||'s/n')} · ${esc(mercadoTxt(y))}</b><span>${fFecha(y.d.fecha)}${y.d.hora?' '+esc(y.d.hora):''} · ${esc(y.e.t)} · ${y.e.hechos}/${y.e.total}</span></button>`;
+  izq+='</div></div>';
+  const pct=x.e.total?Math.round(100*x.e.hechos/x.e.total):0;
+  let der=`<div class="panel"><h2>${esc(d.codnave||'s/n')} · ${esc(mercadoTxt(x))}</h2>
+    <div class="meta">Carga ${fFecha(d.fecha)}${d.hora?' '+esc(d.hora):''} · Planilla ${esc(d.planilla)} · ${esc(d.tipoNave)} · Puerto ${esc(d.puerto||'—')} · ${miles(d.cajas)} cajas<br>
+    ${esc(d.recibidor||'')}${d.nave?' · Nave '+esc(d.nave):''}${d.naviera?' · '+esc(d.naviera):''}${d.transportista?' · Transporte '+esc(d.transportista):''}</div>
+    <div class="barra"><span class="pill p-${x.e.c}">${esc(x.e.t)}</span><div class="avance" style="flex:1;max-width:420px"><i><em style="width:${pct}%"></em></i><span class="num">${x.e.hechos}/${x.e.total}</span></div></div>`;
+  for(const p of x.e.R.partes){
+    const msg=p.estado==='sinpais'?`El puerto <b>${esc(d.puerto||'(sin puerto)')}</b> no tiene país asignado. Escríbelo una vez y queda guardado para las próximas órdenes.`:p.estado==='elegir'?`Hay más de una condición para <b>${esc(p.esp)} / ${esc(p.pais)}</b>: elige la que corresponde.`:p.estado==='sinreq'?`No hay requisitos definidos para <b>${esc(p.esp)} / ${esc(p.pais)}</b>. Créalos en el Mantenedor o elige otro mercado.`:'';
+    const nota=p.estado==='base'?`<span class="sec2">${esc(p.esp)} / ${esc(p.pais)} no tiene requisitos propios en la matriz: aplican solo los requisitos base de la especie, si los hay.</span><br>`:'';
+    der+=`<div class="${msg?'aviso':'asig'}" style="margin-top:10px">${msg?msg+'<br>':nota}
+      ${p.estado==='sinpais'?`<label>País del puerto <input type="text" id="pp_${slug(p.esp)}" list="dl_paises" data-c="puerto" data-p="${esc(d.puerto)}" placeholder="Escribe o elige el país"></label> `:''}
+      <label>${esc(p.esp)}: mercado y condición <select id="mc_${slug(p.esp)}" data-b="cond" data-e="${esc(p.esp)}"><option value="">${p.mid&&!(S.asign[d.id]||{})[p.esp]?'':'Automático'}</option>${p.opciones.sort((a,b)=>(N(S.mer[a].mercado)===N(p.pais)?0:1)-(N(S.mer[b].mercado)===N(p.pais)?0:1)||nomMer(S.mer[a]).localeCompare(nomMer(S.mer[b]),'es')).map(k=>`<option value="${esc(k)}" ${k===p.mid?'selected':''}>${esc(nomMer(S.mer[k]))}</option>`).join('')}</select></label>
+      ${(S.asign[d.id]||{})[p.esp]?`<button class="btn sec chico" data-a="auto" data-e="${esc(p.esp)}">Volver a automático</button>`:''}</div>`;
+  }
+  const mids=[...new Set(x.e.R.partes.map(p=>p.mid).filter(Boolean))];
+  const lk=mids.flatMap(k=>S.mer[k].links||[]).filter(l=>urlOk(l.u));
+  if(lk.length) der+=`<div class="links">${lk.map(l=>`<a href="${esc(urlOk(l.u))}" target="_blank" rel="noopener">${esc(l.t||'Listado oficial')} ↗</a>`).join('')}</div>`;
+  for(const g of GRUPOS){
+    const rs=x.e.rs.filter(r=>r.g===g); if(!rs.length) continue;
+    der+=`<div class="grupo"><h3>${esc(g)}</h3>`;
+    for(const r of rs){
+      const c=ch[r.id]||{}, s=c.s==='ok'?'ok':c.s==='na'?'na':'';
+      der+=`<div class="req ${s}"><button class="caja" data-a="chk" data-r="${esc(r.id)}" data-s="${s==='ok'?'':'ok'}" aria-label="${s==='ok'?'Desmarcar':'Marcar listo'}: ${esc(r.n)}">${s==='ok'?'✓':s==='na'?'N/A':''}</button>
+        <div class="txt"><b>${esc(r.n)}</b>${r.v?`<span class="det">${esc(r.v)}</span>`:''}
+          ${(c.archivos||[]).length?`<div class="resp">${c.archivos.map(a=>`<span><a href="${esc(a.url||'#')}" target="_blank" rel="noopener" title="Subido por ${esc(a.by||'sin nombre')} el ${fHora(a.at)} · ${miles(a.kb)} KB">${esc(a.n)}</a><button data-a="rquita" data-r="${esc(r.id)}" data-f="${esc(a.f)}" aria-label="Quitar respaldo ${esc(a.n)}">${S.conf==='rq:'+r.id+':'+a.f?'¿Quitar?':'×'}</button></span>`).join('')}</div>`:''}</div>
+        <div class="por">${s?esc(c.by||'Sin nombre')+'<br>'+fHora(c.at):''}</div>
+        <button class="btn sec chico" data-a="rsube" data-r="${esc(r.id)}">${S.sube===d.id+':'+r.id?'Subiendo…':'Subir respaldo'}</button>
+        <button class="btn sec chico" data-a="chk" data-r="${esc(r.id)}" data-s="${s==='na'?'':'na'}">${s==='na'?'Sí aplica':'No aplica'}</button></div>`;
+    }
+    der+='</div>';
+  }
+  for(const k of mids){const m=S.mer[k]; if(m.guia&&m.guia.length) der+=`<details class="guia"><summary>Guía de referencia ${esc(nomMer(m))}</summary><dl>${m.guia.map(g=>`<dt>${esc(g.t)}</dt><dd>${esc(g.d||'')}${urlOk(g.u)?` <a href="${esc(urlOk(g.u))}" target="_blank" rel="noopener">Abrir ↗</a>`:''}</dd>`).join('')}</dl></details>`}
+  return `<div class="dos">${izq}${der}</div></div>`;
+}
+
+function vMantenedor(){
+  const M=S.mt, tabs=[['mercados','Mercados y condiciones'],['requisitos','Catálogo de requisitos'],['puertos','Puertos y especies'],['sdt','Conexión SDT']];
+  let h=`<div class="sub">${tabs.map(([k,t])=>`<button class="btn ${M.tab===k?'':'sec'}" data-a="mtab" data-t="${k}">${t}</button>`).join('')}</div>`;
+  if(M.tab==='sdt'){
+    const s=S.sdt||{}, esp=S.pidio&&Date.now()-S.pidio<180000;
+    return h+`<div class="panel"><h2>Conexión con SDT</h2><div class="meta">Un robot en GitHub lee las órdenes de embarque de SDT cada 10 minutos (GitHub puede atrasarlo algunos minutos) y las deja en SharePoint. El estado despachado sale del informe de despacho de fruta a puerto.</div>
+      <p><span class="pill p-${s.ok?'ok':'crit'}">${s.ok?'Conectado':'Sin lectura buena'}</span> Última lectura buena: <b>${esc(s.at||'ninguna')}</b></p>
+      ${s.error?`<div class="aviso">${esc(s.error)}</div>`:''}
+      <p>Órdenes en la ventana de fechas: <b>${S.despachos.length}</b></p>
+      <div class="acciones"><button class="btn" data-a="sync">${esp?'Lectura pedida… tarda cerca de un minuto':'Leer SDT ahora'}</button><button class="btn sec" data-a="salir">Cerrar sesión Microsoft</button></div>
+      <h4>Llave para «Leer SDT ahora»</h4>
+      <p class="meta">${S.github?'Hay una llave de GitHub guardada.':'Falta guardar la llave de GitHub.'} Es un token de GitHub con permiso solo para ejecutar el robot de este repositorio; queda guardado en SharePoint, visible solo para quienes tienen acceso al sitio.</p>
+      <div class="barra"><input type="password" id="gh_tk" placeholder="Pegar token de GitHub" autocomplete="off" style="min-width:320px"><button class="btn sec" data-a="ghguardar">Guardar llave</button></div>
+      <h4>Columnas que entrega el informe de órdenes de embarque</h4><p class="meta" style="overflow-wrap:anywhere">${esc((s.columnas||[]).join(', ')||'Sin información todavía.')}</p></div>`;
+  }
+  if(M.tab==='puertos'){
+    const ps=[...new Set([...S.despachos.map(d=>N(d.puerto)).filter(Boolean),...Object.keys(S.puertos)])].sort();
+    const usados=new Set(S.despachos.map(d=>N(d.puerto)));
+    if(M.grupos==null) M.grupos=Object.entries(S.grupos).map(([k,v])=>k+': '+v.join(', ')).join('\n');
+    h+=`<div class="panel"><h2>Puerto de destino → país</h2><div class="meta">SDT entrega el puerto de arribo de cada orden. Aquí se define a qué país corresponde, para aplicar los requisitos de ese mercado. Se puede escribir un país que todavía no tenga requisitos propios: en ese caso aplican solo los requisitos base de la especie.</div>
+      <div class="tabla"><table class="mreq"><thead><tr><th>Puerto en SDT</th><th>País / mercado</th><th></th></tr></thead><tbody>`;
+    ps.forEach((p,i)=>{h+=`<tr><td>${esc(p)}</td><td><input type="text" id="pt_${i}" list="dl_paises" data-c="puerto" data-p="${esc(p)}" value="${esc(S.puertos[p]||'')}" placeholder="Sin asignar"></td><td>${usados.has(p)?'<span class="pill p-neutro">con órdenes ahora</span>':''}</td></tr>`});
+    h+=`</tbody></table></div>
+      <h4>Grupos de especie</h4><label class="meta" for="g_txt">Una línea por grupo: Grupo: especie, especie… Sirve para que un mercado definido como «Carozos» o «Cítricos» aplique a las especies que SDT trae por separado. Especies que hoy trae SDT: ${esc(especiesSDT().join(', ')||'ninguna')}.</label>
+      <textarea id="g_txt" data-b="grupos" style="min-height:110px">${esc(M.grupos)}</textarea>
+      <div class="acciones"><button class="btn" data-a="gguardar">Guardar grupos</button></div></div>`;
+    return h;
+  }
+  if(M.tab==='requisitos'){
+    if(!M.cat){M.cat=S.cat.map(c=>({...c}));M.ga=[...S.gruposActivos]}
+    h+=`<div class="panel"><h2>Catálogo de requisitos</h2><div class="meta">Son las columnas de la matriz. Lo que agregues aquí queda disponible para activarlo en cada mercado.</div>
+      <div class="asig" style="margin-bottom:12px"><b>Grupos que se controlan en el despacho:</b> ${GRUPOS.map(g=>`<label style="margin-left:14px"><input type="checkbox" id="ga_${slug(g)}" data-b="ga" data-g="${g}" ${M.ga.includes(g)?'checked':''}> ${g}</label>`).join('')}<br><span class="sec2">Solo los requisitos de los grupos marcados aparecen en el Seguimiento y el Checklist. Los demás quedan guardados en la matriz como referencia.</span></div>
+      <div class="tabla"><table class="mreq"><thead><tr><th>Requisito</th><th>Grupo</th><th>Aplica a la vía</th><th>Orden</th><th></th></tr></thead><tbody>`;
+    M.cat.forEach((c,i)=>{h+=`<tr><td><input type="text" id="cn_${esc(c.id)}" data-b="c.n" data-i="${i}" value="${esc(c.n)}"></td>
+      <td><select id="cg_${esc(c.id)}" data-b="c.g" data-i="${i}">${GRUPOS.map(g=>`<option ${g===c.g?'selected':''}>${g}</option>`).join('')}</select></td>
+      <td><select id="cv_${esc(c.id)}" data-b="c.via" data-i="${i}"><option value="">Todas</option>${VIAS.map(v=>`<option ${N(v)===N(c.via)?'selected':''}>${v}</option>`).join('')}</select></td>
+      <td style="white-space:nowrap"><button class="btn sec chico" data-a="csube" data-i="${i}" aria-label="Subir">▲</button> <button class="btn sec chico" data-a="cbaja" data-i="${i}" aria-label="Bajar">▼</button></td>
+      <td><button class="btn pel chico" data-a="cquita" data-i="${i}">Quitar</button></td></tr>`});
+    return h+`</tbody></table></div><div class="acciones"><button class="btn sec" data-a="cnuevo">Agregar requisito</button><button class="btn" data-a="cguardar">Guardar catálogo</button><button class="btn sec" data-a="cdescartar">Descartar cambios</button></div></div>`;
+  }
+  const ids=Object.keys(S.mer).sort((a,b)=>nomMer(S.mer[a]).localeCompare(nomMer(S.mer[b]),'es'));
+  let izq=`<div><div class="barra"><button class="btn" data-a="mnuevo">Nuevo mercado</button></div><div class="lista">`;
+  for(const id of ids){const m=S.mer[id];izq+=`<button class="item ${id===M.sel?'on':''}" data-a="msel" data-id="${esc(id)}"><b>${esc(nomMer(m))}</b><span>${S.cat.filter(c=>c.id in (m.reqs||{})&&S.gruposActivos.includes(c.g)).length} de despacho · ${Object.keys(m.reqs||{}).length} en total${m.base?' · base de la especie':''}</span></button>`}
+  izq+='</div></div>';
+  let der;
+  if(!M.d) der=`<div class="panel vacio">Elige un mercado de la lista para editar sus requisitos, o crea uno nuevo.</div>`;
+  else{
+    const d=M.d;
+    der=`<div class="panel"><h2>${M.sel?'Editar':'Nuevo'} mercado</h2>
+    <div class="form">
+      <label>Especie<input type="text" id="m_especie" data-b="m.especie" list="dl_esp" value="${esc(d.especie)}"></label>
+      <label>Mercado / país<input type="text" id="m_mercado" data-b="m.mercado" list="dl_pais" value="${esc(d.mercado)}"></label>
+      <label>Condición (opcional)<input type="text" id="m_cond" data-b="m.cond" value="${esc(d.cond)}" placeholder="Ej.: Tipo 1 · fuera del área"></label>
+      <label class="fila ancho"><input type="checkbox" id="m_base" data-b="m.base" ${d.base?'checked':''}> Requisitos base: se suman a todos los mercados de esta especie</label>
+    </div><datalist id="dl_esp">${[...new Set(Object.values(S.mer).map(m=>m.especie))].sort().map(e=>`<option value="${esc(e)}">`).join('')}</datalist><datalist id="dl_pais">${paises().map(e=>`<option value="${esc(e)}">`).join('')}</datalist>
+    <h4>Requisitos que exige</h4>
+    <div class="tabla"><table class="mreq"><thead><tr><th>Exige</th><th>Requisito</th><th>Detalle a mostrar (opcional)</th></tr></thead><tbody>`;
+    for(const g of GRUPOS){
+      const cs=S.cat.filter(c=>c.g===g); if(!cs.length) continue;
+      der+=`<tr class="gr"><td colspan="3">${g}${S.gruposActivos.includes(g)?'':' · no se controla en el despacho (solo referencia)'}</td></tr>`;
+      for(const c of cs){const v=d.reqs[c.id];
+        der+=`<tr><td><input type="checkbox" id="mq_${esc(c.id)}" data-b="mq" data-r="${esc(c.id)}" ${v!==undefined?'checked':''} aria-label="${esc(c.n)}"></td><td><label for="mq_${esc(c.id)}">${esc(c.n)}${c.via?` <span class="sec2">(solo ${esc(c.via.toLowerCase())})</span>`:''}</label></td>
+        <td><input type="text" id="mv_${esc(c.id)}" data-b="mv" data-r="${esc(c.id)}" value="${v&&v!==true?esc(v):''}" placeholder="Ej.: PACKING LIST, Radio 7,2 km"></td></tr>`}
+    }
+    der+=`</tbody></table></div>
+    <h4>Listados oficiales (enlaces)</h4>
+    <label class="meta" for="m_links">Uno por línea: Nombre | https://…</label>
+    <textarea id="m_links" data-b="m.links" style="min-height:70px">${esc(d._links)}</textarea>
+    <h4>Guía de referencia</h4>
+    <label class="meta" for="m_guia">Una línea por punto: Título | detalle | enlace (detalle y enlace son opcionales)</label>
+    <textarea id="m_guia" data-b="m.guia">${esc(d._guia)}</textarea>
+    <div class="acciones"><button class="btn" data-a="mguardar">Guardar mercado</button>
+      ${M.sel?`<button class="btn sec" data-a="mdup">Duplicar</button><button class="btn pel" data-a="mborrar">${S.conf==='mborrar'?'¿Confirmas eliminar?':'Eliminar mercado'}</button>`:''}</div></div>`;
+  }
+  return h+`<div class="dos">${izq}${der}</div>`;
+}
+
+function render(){
+  const a=document.activeElement, aid=a&&a.id&&a.closest('#app')?a.id:null; let s0,s1; try{s0=a.selectionStart;s1=a.selectionEnd}catch(e){}
+  if(a&&a.dataset&&a.dataset.c&&a.closest('#app')&&!S._forzar)return; // no borrar un país a medio escribir
+  if(a&&a.tagName==='SELECT'&&a.closest('#app')&&document.hasFocus()&&S._ult&&Date.now()-S._ult<1500)return; // no cerrar un desplegable abierto
+  $('#nav').innerHTML=VISTAS.map(([k,t])=>`<a href="#${k}" class="${k===S.vista?'on':''}">${t}</a>`).join('');
+  let h='';
+  if(S.aviso) h+=`<div class="aviso">${esc(S.aviso)}</div>`;
+  if(S.sinSesion) h+=`<div class="panel" style="max-width:560px;margin:40px auto;text-align:center"><h2>Control de requisitos SAG</h2><p class="meta">Entra con tu cuenta Microsoft de C&amp;L Fruit para ver y marcar los requisitos de cada despacho.</p><div class="acciones" style="justify-content:center"><button class="btn" data-a="entrar">Entrar con cuenta Microsoft</button></div></div>`;
+  else if(S.sembrando) h+=`<div class="vacio">${esc(S.sembrando)}</div>`;
+  else if(!S.listo) h+=S.aviso?'':`<div class="vacio">Cargando datos…</div>`;
+  else if(S.sinMatriz) h+=`<div class="panel" style="max-width:640px;margin:30px auto"><h2>Primera vez: cargar la matriz de requisitos</h2><p class="meta">Las listas de SharePoint están vacías. Carga la matriz una sola vez; después se mantiene desde el Mantenedor.</p><div class="acciones"><button class="btn" data-a="semilla">Cargar matriz inicial (Excel 2026)</button><button class="btn sec" data-a="importar">Importar estado.json de la versión local</button></div></div>`;
+  else h+=barraSDT()+(S.vista==='checklist'?vChecklist():S.vista==='mantenedor'?vMantenedor():vSeguimiento());
+  $('#app').innerHTML=h+`<datalist id="dl_paises">${paises().map(z=>`<option value="${esc(z)}">`).join('')}</datalist>`;
+  if(aid){const n=document.getElementById(aid); if(n){n.focus({preventScroll:true}); try{if(s0!=null)n.setSelectionRange(s0,s1)}catch(e){}}}
+}
+
+/* ---------- mantenedor: borrador ---------- */
+function borrador(m){
+  const d=JSON.parse(JSON.stringify(m||{especie:'',mercado:'',cond:'',base:false,reqs:{},links:[],guia:[]}));
+  d.reqs=d.reqs||{}; d.cond=d.cond||'';
+  d._links=(d.links||[]).map(l=>(l.t||'')+' | '+(l.u||'')).join('\n');
+  d._guia=(d.guia||[]).map(g=>[g.t||'',g.d||'',g.u||''].join(' | ').replace(/( \| )+$/,'')).join('\n');
+  return d;
+}
+async function guardarMercado(){
+  const M=S.mt,d=M.d; const esp=d.especie.trim(), mer=d.mercado.trim();
+  if(!esp||!mer){toast('Completa especie y mercado.');return}
+  const lineas=t=>String(t||'').split('\n').map(l=>l.trim()).filter(Boolean);
+  const doc={especie:esp,mercado:mer,cond:d.cond.trim(),base:!!d.base,reqs:d.reqs,
+    links:lineas(d._links).map(l=>{const p=l.split('|');return{t:(p[0]||'').trim(),u:p.slice(1).join('|').trim()}}),
+    guia:lineas(d._guia).map(l=>{const p=l.split('|').map(x=>x.trim());const g={t:p[0]};if(p[1])g.d=p[1];if(p[2])g.u=p.slice(2).join('|');return g})};
+  let id=M.sel;
+  if(!id){id=slug(esp+'-'+mer+(doc.cond?'-'+doc.cond:''))||'m'+Date.now(); if(S.mer[id]) id+='-'+Date.now().toString(36)}
+  M.sel=id; M.d=borrador(doc);
+  await enviar('/api/mercado',{id,doc},'Mercado guardado.');
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-a]'); if(!t)return;
+  const a=t.dataset.a, M=S.mt;
+  const conf=k=>{if(S.conf===k){S.conf=null;return true}S.conf=k;render();return false};
+  if(a!=='mborrar'&&a!=='rquita') S.conf=null;
+  if(a==='abrir'){S.sel=t.dataset.id;S.vista='checklist';location.hash='checklist';render();scrollTo(0,0)}
+  else if(a==='sel'){S.sel=t.dataset.id;render()}
+  else if(a==='chk'){enviar('/api/check',{id:S.sel,rid:t.dataset.r,s:t.dataset.s,by:S.nombre})}
+  else if(a==='rsube'){S.up={id:S.sel,rid:t.dataset.r};const f=$('#archivo');f.value='';f.click()}
+  else if(a==='rquita'){if(conf('rq:'+t.dataset.r+':'+t.dataset.f))enviar('/api/respaldo_borrar',{id:S.sel,rid:t.dataset.r,f:t.dataset.f},'Respaldo quitado.')}
+  else if(a==='auto')enviar('/api/condicion',{id:S.sel,especie:t.dataset.e,mercadoId:''});
+  else if(a==='sync'){enviar('/api/sincronizar',{},'Lectura pedida al robot: se actualiza sola en cerca de un minuto.')}
+  else if(a==='entrar')B.entrar();
+  else if(a==='salir')B.salir();
+  else if(a==='ghguardar'){const v=$('#gh_tk').value.trim();if(!v)toast('Pega el token antes de guardar.');else enviar('/api/github',{token:v},'Llave guardada.')}
+  else if(a==='semilla'){fetch('semilla.json').then(r=>r.json()).then(sembrar).catch(()=>toast('No se pudo leer la matriz inicial.'))}
+  else if(a==='importar'){const f=$('#importar');f.value='';f.click()}
+  else if(a==='mtab'){M.tab=t.dataset.t;M.grupos=null;render()}
+  else if(a==='msel'){M.sel=t.dataset.id;M.d=borrador(S.mer[M.sel]);render()}
+  else if(a==='mnuevo'){M.sel=null;M.d=borrador(null);render();const n=$('#m_especie');if(n)n.focus()}
+  else if(a==='mdup'){M.sel=null;M.d.cond=(M.d.cond?M.d.cond+' ':'')+'(copia)';render();toast('Copia lista: ajusta la condición o el mercado y guarda.')}
+  else if(a==='mguardar')guardarMercado();
+  else if(a==='mborrar'){if(conf('mborrar')){const id=M.sel;M.sel=null;M.d=null;enviar('/api/mercado_borrar',{id},'Mercado eliminado.')}}
+  else if(a==='cnuevo'){M.cat.push({id:'r'+Date.now().toString(36),n:'Nuevo requisito',g:'Despacho',via:''});render()}
+  else if(a==='cquita'){M.cat.splice(+t.dataset.i,1);render()}
+  else if(a==='csube'||a==='cbaja'){const i=+t.dataset.i,j=i+(a==='csube'?-1:1);if(j>=0&&j<M.cat.length){[M.cat[i],M.cat[j]]=[M.cat[j],M.cat[i]];render()}}
+  else if(a==='cdescartar'){M.cat=null;render()}
+  else if(a==='cguardar'){const items=M.cat.map(c=>({id:c.id,n:String(c.n).trim()||'Sin nombre',g:c.g,via:c.via||''}));const ga=M.ga;M.cat=null;enviar('/api/catalogo',{items,gruposActivos:ga},'Catálogo guardado.')}
+  else if(a==='gguardar'){const grupos={};String(M.grupos||'').split('\n').forEach(l=>{const i=l.indexOf(':');if(i>0)grupos[l.slice(0,i).trim()]=l.slice(i+1).split(',').map(x=>x.trim()).filter(Boolean)});M.grupos=null;enviar('/api/grupos',{grupos},'Grupos guardados.')}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('tr.fila'))e.target.click()});
+document.addEventListener('focusin',e=>{if(e.target.tagName==='SELECT')S._ult=Date.now()});
+document.addEventListener('mousedown',e=>{if(e.target.tagName==='SELECT')S._ult=Date.now()});
+document.addEventListener('input',e=>{
+  const t=e.target,b=t.dataset&&t.dataset.b; if(!b)return; const M=S.mt; S._ult=0;
+  if(b==='nombre'){S.nombre=t.value.trim();try{localStorage.setItem('sag_nombre',S.nombre)}catch(x){}}
+  else if(b==='f.q'){S.f.q=t.value;render()}
+  else if(b==='f.esp'){S.f.esp=t.value;render()}
+  else if(b==='f.desp'){S.f.desp=t.checked;render()}
+  else if(b==='puerto'){t.blur();enviar('/api/puerto',{puerto:t.dataset.p,pais:t.value},'Puerto actualizado.')}
+  else if(b==='cond'){t.blur();enviar('/api/condicion',{id:S.sel,especie:t.dataset.e,mercadoId:t.value})}
+  else if(b==='grupos')M.grupos=t.value;
+  else if(b==='m.base')M.d.base=t.checked;
+  else if(b==='m.links')M.d._links=t.value;
+  else if(b==='m.guia')M.d._guia=t.value;
+  else if(b.startsWith('m.'))M.d[b.slice(2)]=t.value;
+  else if(b==='mq'){const r=t.dataset.r;if(t.checked){const v=$('#mv_'+r).value.trim();M.d.reqs[r]=v||true}else delete M.d.reqs[r]}
+  else if(b==='mv'){const r=t.dataset.r,v=t.value.trim();if(v){M.d.reqs[r]=v;$('#mq_'+r).checked=true}else if(r in M.d.reqs)M.d.reqs[r]=true}
+  else if(b==='c.n')M.cat[+t.dataset.i].n=t.value;
+  else if(b==='c.g')M.cat[+t.dataset.i].g=t.value;
+  else if(b==='c.via')M.cat[+t.dataset.i].via=t.value;
+  else if(b==='ga'){const g=t.dataset.g;M.ga=t.checked?[...new Set([...M.ga,g])]:M.ga.filter(x=>x!==g)}
+});
+$('#archivo').addEventListener('change',async e=>{
+  const fs=[...e.target.files], u=S.up; if(!u||!fs.length)return;
+  S.sube=u.id+':'+u.rid; render(); let ok=0;
+  for(const f of fs){
+    if(f.size>25*1024*1024){toast('«'+f.name+'» pesa más de 25 MB y no se subió.');continue}
+    try{
+      const limpio=f.name.replace(/["*:<>?\/\\|#%]/g,'_').trim()||'respaldo';
+      const r=await B.subir(u.id+'/'+u.rid+'/'+limpio,f);
+      await modificar('RQ_Checks',u.id,o=>{o[u.rid]=o[u.rid]||{s:''};(o[u.rid].archivos=o[u.rid].archivos||[]).push({n:f.name,f:r.id,url:r.url,kb:r.kb,by:S.nombre,at:ahoraISO()})});
+      ok++;
+    }catch(x){toast('No se pudo subir «'+f.name+'»: '+(x.message||'sin conexión'))}
+  }
+  S.sube=null; e.target.value=''; huella=''; try{await cargar()}catch(x){} render(); if(ok)toast(ok===1?'Respaldo subido.':ok+' respaldos subidos.');
+});
+$('#importar').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{sembrar(JSON.parse(await f.text()))}catch(x){toast('Ese archivo no es un estado.json válido.')}});
+document.addEventListener('change',e=>{const t=e.target; if(t.dataset&&t.dataset.c==='puerto'){const v=t.value.trim();t.blur();enviar('/api/puerto',{puerto:t.dataset.p,pais:v},v?'Puerto asignado a '+v+'.':'Puerto sin país.')}});
+function ruta(){const h=location.hash.slice(1);S.vista=VISTAS.some(v=>v[0]===h)?h:'seguimiento';S.conf=null;render()}
+addEventListener('hashchange',ruta);
+iniciar();
+setInterval(()=>{if(S.vista==='seguimiento'&&!document.activeElement.closest('#app'))render()},60000);
+</script>
+</body>
+</html>

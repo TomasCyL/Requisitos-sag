@@ -264,10 +264,7 @@ const Nube={ // Microsoft Graph con la cuenta Microsoft de cada persona
     if(this._l)return this._l;
     const sid=await this.sid(), j=await this.g(`/sites/${sid}/lists?$select=id,displayName&$top=200`), l={};
     for(const x of j.value)l[x.displayName]=x.id;
-    for(const [n,col] of Object.entries(LISTAS)) if(!l[n]){ // primera vez: crea la lista
-      const c=await this.g(`/sites/${sid}/lists`,{method:'POST',body:{displayName:n,description:'Control de requisitos SAG',columns:[{name:col,text:{allowMultipleLines:true,textType:'plain',maxLength:0}}],list:{template:'genericList'}}});
-      l[n]=c.id;
-    }
+    for(const n of Object.keys(LISTAS)) if(!l[n]) throw new Error('Falta la lista '+n+' en el sitio de SharePoint, o tu cuenta no tiene acceso al sitio.');
     return this._l=l;
   },
   async usuario(){try{const u=await this.g('/me?$select=displayName');return u.displayName||''}catch(e){return ''}},
@@ -372,7 +369,7 @@ async function enviar(ruta,cuerpo,okMsg){
 }
 async function sondear(){
   try{if(await cargar())render();else if(S.aviso){S.aviso='';render()}}
-  catch(e){if(!S.aviso){S.aviso='Sin conexión con SharePoint. Se sigue intentando.';render()}}
+  catch(e){if(!S.aviso){S.aviso=e&&e.status===403?'Tu cuenta no tiene acceso al sitio de SharePoint EXPORTADORACYL. Pide que te agreguen como miembro del sitio.':'Sin conexión con SharePoint. Se sigue intentando.'+(e&&e.message?' ('+e.message+')':'');render()}}
   setTimeout(sondear,(S.pidio&&Date.now()-S.pidio<180000?5:CFG.cadaSeg)*1000);
 }
 async function sembrar(e){ // primera vez: carga la matriz (semilla.json o el estado.json de la versión local)

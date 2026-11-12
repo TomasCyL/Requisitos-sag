@@ -20,7 +20,7 @@ Entra ID → Registros de aplicaciones → **Entregas CyL** → Autenticación �
 (Usa los mismos permisos ya aprobados de Entregas: `Sites.ReadWrite.All` y `User.Read` delegados.)
 
 ### 3. Abrir la app y cargar la matriz
-Abrir https://tomascyl.github.io/Requisitos-sag/ con una cuenta que pueda editar el sitio EXPORTADORACYL. La primera vez crea las tres listas y ofrece **Cargar matriz inicial** o **Importar estado.json** (el de la versión local, con lo ya editado).
+Abrir https://tomascyl.github.io/Requisitos-sag/ con una cuenta que pueda editar el sitio EXPORTADORACYL. Las tres listas (`RQ_Datos`, `RQ_Mercados`, `RQ_Checks`) ya están creadas en el sitio y la matriz ya está cargada (12-11-2026). En un sitio nuevo hay que crear antes esas listas, cada una con una columna de varias líneas de texto sin formato (`Valor` en RQ_Datos, `Datos` en las otras dos); recién entonces la app ofrece **Cargar matriz inicial** o **Importar estado.json** (el de la versión local, con lo ya editado).
 
 ### 4. Crear la app del robot en Entra (requiere un administrador)
 1. Registros de aplicaciones → Nuevo registro → nombre `Requisitos SAG robot` (sin URI de redirección).

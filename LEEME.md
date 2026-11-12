@@ -22,17 +22,16 @@ Entra ID → Registros de aplicaciones → **Entregas CyL** → Autenticación �
 ### 3. Abrir la app y cargar la matriz
 Abrir https://tomascyl.github.io/Requisitos-sag/ con una cuenta que pueda editar el sitio EXPORTADORACYL. Las tres listas (`RQ_Datos`, `RQ_Mercados`, `RQ_Checks`) ya están creadas en el sitio y la matriz ya está cargada (12-11-2026). En un sitio nuevo hay que crear antes esas listas, cada una con una columna de varias líneas de texto sin formato (`Valor` en RQ_Datos, `Datos` en las otras dos); recién entonces la app ofrece **Cargar matriz inicial** o **Importar estado.json** (el de la versión local, con lo ya editado).
 
-### 4. Crear la app del robot en Entra (requiere un administrador)
-1. Registros de aplicaciones → Nuevo registro → nombre `Requisitos SAG robot` (sin URI de redirección).
-2. Permisos de API → Microsoft Graph → **Permisos de aplicación** → `Sites.Selected` → *Conceder consentimiento de administrador*.
-3. Certificados y secretos → Nuevo secreto de cliente → copiar el **valor**.
-4. Un administrador le da al robot permiso de escritura **solo en el sitio EXPORTADORACYL**. En Graph Explorer (https://developer.microsoft.com/graph/graph-explorer), con `Sites.FullControl.All` consentido:
+### 4. App del robot en Entra (requiere un administrador)
+La app `Requisitos SAG robot` ya está registrada (Id. de aplicación `5f1a4569-72a5-4eaa-ba0f-2d9e7eaab96c`) con el permiso de aplicación `Sites.Selected`. El inquilino bloquea los secretos de cliente, así que el robot entra con una **credencial federada** de GitHub Actions (sin secreto):
+
+1. Certificados y secretos → **Credenciales federadas** → Agregar credencial → escenario *Acciones de GitHub que implementan recursos de Azure*: organización `TomasCyL`, repositorio `Requisitos-sag`, tipo de entidad *Rama*, rama `main`, nombre `github-main`.
+2. Un administrador concede el consentimiento: Permisos de API → *Conceder consentimiento de administrador*.
+3. Un administrador le da al robot escritura **solo en el sitio EXPORTADORACYL**. En Graph Explorer (https://developer.microsoft.com/graph/graph-explorer), con `Sites.FullControl.All` consentido:
    - `GET https://graph.microsoft.com/v1.0/sites/cylfruit.sharepoint.com:/sites/EXPORTADORACYL` → copiar el `id`.
    - `POST https://graph.microsoft.com/v1.0/sites/{id}/permissions` con el cuerpo:
 
-         {"roles":["write"],"grantedToIdentities":[{"application":{"id":"<Id. de aplicación del robot>","displayName":"Requisitos SAG robot"}}]}
-
-   Alternativa más simple pero más amplia: darle al robot el permiso de aplicación `Sites.ReadWrite.All` (escribe en todos los sitios) y omitir este punto 4.
+         {"roles":["write"],"grantedToIdentities":[{"application":{"id":"5f1a4569-72a5-4eaa-ba0f-2d9e7eaab96c","displayName":"Requisitos SAG robot"}}]}
 
 ### 5. Cargar los secretos del robot
 Repositorio → Settings → Secrets and variables → Actions → *New repository secret*:
@@ -41,9 +40,6 @@ Repositorio → Settings → Secrets and variables → Actions → *New reposito
 |---|---|
 | `SDT_USUARIO` | usuario de SDT |
 | `SDT_CLAVE` | clave de SDT |
-| `GRAPH_TENANT_ID` | `5946134b-9789-4d13-86c4-e01684301b6a` |
-| `GRAPH_CLIENT_ID` | Id. de aplicación (cliente) de `Requisitos SAG robot` |
-| `GRAPH_CLIENT_SECRET` | valor del secreto del paso 4.3 |
 
 Probar: pestaña Actions → **Sincronizar SDT** → *Run workflow*. Debe terminar en verde con el mensaje `OK: N ordenes de embarque guardadas en SharePoint`.
 

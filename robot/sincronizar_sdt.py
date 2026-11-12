@@ -8,7 +8,8 @@ RQ_Datos de SharePoint, de donde lo toma la app web. Nada de SDT queda en GitHub
 Lo ejecuta GitHub Actions cada 5 min y a demanda. Solo libreria estandar.
 Variables de entorno (secretos del repositorio):
   SDT_USUARIO, SDT_CLAVE                         usuario y clave de SDT
-  GRAPH_TENANT_ID, GRAPH_CLIENT_ID, GRAPH_CLIENT_SECRET   app de Entra del robot
+  GRAPH_TENANT_ID, GRAPH_CLIENT_ID               app de Entra del robot (entra con credencial
+                                                 federada de GitHub Actions; GRAPH_CLIENT_SECRET es opcional)
 """
 import json, os, sys, base64, datetime, unicodedata, urllib.request, urllib.parse, urllib.error
 
@@ -146,12 +147,24 @@ def armar_despachos(registros, despachados):
 class Graph:
     def __init__(self):
         t, c, s = (os.environ.get(k, "") for k in ("GRAPH_TENANT_ID", "GRAPH_CLIENT_ID", "GRAPH_CLIENT_SECRET"))
-        if not (t and c and s):
-            raise RuntimeError("Faltan los secretos GRAPH_TENANT_ID, GRAPH_CLIENT_ID y GRAPH_CLIENT_SECRET.")
-        body = urllib.parse.urlencode({"grant_type": "client_credentials", "client_id": c, "client_secret": s,
-                                       "scope": "https://graph.microsoft.com/.default"}).encode()
-        with urllib.request.urlopen(urllib.request.Request("https://login.microsoftonline.com/%s/oauth2/v2.0/token" % t, data=body), timeout=60) as r:
-            self.token = json.loads(r.read().decode())["access_token"]
+        if not (t and c):
+            raise RuntimeError("Faltan GRAPH_TENANT_ID y GRAPH_CLIENT_ID.")
+        datos = {"grant_type": "client_credentials", "client_id": c, "scope": "https://graph.microsoft.com/.default"}
+        if s:                                   # con secreto de cliente (si el inquilino lo permite)
+            datos["client_secret"] = s
+        else:                                   # sin secreto: credencial federada de GitHub Actions (OIDC)
+            url, tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL", ""), os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN", "")
+            if not (url and tok):
+                raise RuntimeError("No hay secreto ni identidad de GitHub Actions (falta 'permissions: id-token: write' en el flujo).")
+            req = urllib.request.Request(url + "&audience=" + urllib.parse.quote("api://AzureADTokenExchange", safe=""), headers={"Authorization": "Bearer " + tok})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                datos["client_assertion"] = json.loads(r.read().decode())["value"]
+            datos["client_assertion_type"] = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+        try:
+            with urllib.request.urlopen(urllib.request.Request("https://login.microsoftonline.com/%s/oauth2/v2.0/token" % t, data=urllib.parse.urlencode(datos).encode()), timeout=60) as r:
+                self.token = json.loads(r.read().decode())["access_token"]
+        except urllib.error.HTTPError as e:
+            raise RuntimeError("Entra rechazo la identidad del robot: %s" % e.read().decode("utf-8", "ignore")[:400])
         m = urllib.parse.urlparse(SP_SITIO)
         self.site = self.call("GET", "/sites/%s:%s" % (m.netloc, m.path))["id"]
         listas = self.call("GET", "/sites/%s/lists?$select=id,displayName&$top=200" % self.site)["value"]

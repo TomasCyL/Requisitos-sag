@@ -5,6 +5,10 @@ on:
     - cron: "*/5 * * * *"      # cada 5 minutos, el mínimo que permite GitHub (GitHub puede atrasarlo algunos minutos)
   workflow_dispatch:            # y a demanda: boton "Leer SDT ahora" de la app, o "Run workflow" aqui
 
+permissions:
+  id-token: write               # identidad de GitHub para entrar a Entra sin secreto (credencial federada)
+  contents: read
+
 concurrency:
   group: sincronizar-sdt
   cancel-in-progress: false
@@ -20,6 +24,5 @@ jobs:
         env:
           SDT_USUARIO: ${{ secrets.SDT_USUARIO }}
           SDT_CLAVE: ${{ secrets.SDT_CLAVE }}
-          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
-          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
-          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_TENANT_ID: 5946134b-9789-4d13-86c4-e01684301b6a      # Id. de directorio (no es secreto)
+          GRAPH_CLIENT_ID: 5f1a4569-72a5-4eaa-ba0f-2d9e7eaab96c      # Id. de aplicacion de "Requisitos SAG robot" (no es secreto)

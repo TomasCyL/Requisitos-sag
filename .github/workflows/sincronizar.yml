@@ -2,7 +2,7 @@ name: Sincronizar SDT
 
 on:
   schedule:
-    - cron: "*/10 * * * *"     # cada 10 minutos (GitHub puede atrasarlo algunos minutos)
+    - cron: "*/5 * * * *"      # cada 5 minutos, el mínimo que permite GitHub (GitHub puede atrasarlo algunos minutos)
   workflow_dispatch:            # y a demanda: boton "Leer SDT ahora" de la app, o "Run workflow" aqui
 
 concurrency:

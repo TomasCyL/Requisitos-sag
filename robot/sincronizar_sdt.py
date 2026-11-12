@@ -5,7 +5,7 @@ Robot de sincronizacion: lee de SDT las ordenes de embarque y los despachos
 (las mismas APIs de la Agenda de Despachos) y deja el resultado en la lista
 RQ_Datos de SharePoint, de donde lo toma la app web. Nada de SDT queda en GitHub.
 
-Lo ejecuta GitHub Actions cada 10 min y a demanda. Solo libreria estandar.
+Lo ejecuta GitHub Actions cada 5 min y a demanda. Solo libreria estandar.
 Variables de entorno (secretos del repositorio):
   SDT_USUARIO, SDT_CLAVE                         usuario y clave de SDT
   GRAPH_TENANT_ID, GRAPH_CLIENT_ID, GRAPH_CLIENT_SECRET   app de Entra del robot

@@ -4,7 +4,7 @@ App web para que la contraparte SAG controle los requisitos de despacho de cada 
 
 - **Pantalla:** GitHub Pages → https://tomascyl.github.io/Requisitos-sag/ (se entra con la cuenta Microsoft de C&L).
 - **Datos:** listas `RQ_Datos`, `RQ_Mercados` y `RQ_Checks` del sitio SharePoint EXPORTADORACYL. Los respaldos de cada check quedan en la biblioteca de documentos del sitio, carpeta `APP REQUISITOS EXPORTACION/Respaldos/<orden>/<requisito>/`.
-- **Despachos:** el robot `robot/sincronizar_sdt.py` (GitHub Actions, cada 10 min y a demanda) lee SDT y deja las órdenes en `RQ_Datos`. Ningún dato de SDT queda en este repositorio.
+- **Despachos:** el robot `robot/sincronizar_sdt.py` (GitHub Actions, cada 5 min y a demanda) lee SDT y deja las órdenes en `RQ_Datos`. Ningún dato de SDT queda en este repositorio.
 - **Demo sin cuentas ni datos reales:** agregar `?demo` a la dirección.
 
 ## Puesta en marcha (una sola vez)
@@ -51,7 +51,7 @@ Probar: pestaña Actions → **Sincronizar SDT** → *Run workflow*. Debe termin
 GitHub → Settings (del usuario) → Developer settings → Fine-grained tokens → *Generate new token*: solo el repositorio `Requisitos-sag`, permiso **Actions: Read and write**. Pegarlo en la app: Mantenedor → Conexión SDT → *Guardar llave*. Queda en SharePoint, no en el código.
 
 ## Notas
-- GitHub ejecuta el cron "cada 10 minutos" con atraso variable (a veces 15 a 30 min en horas de carga). Para un dato al momento, usar «Leer SDT ahora» (tarda cerca de un minuto).
+- GitHub ejecuta el cron "cada 5 minutos" con atraso variable (a veces 15 a 30 min en horas de carga). Para un dato al momento, usar «Leer SDT ahora» (tarda cerca de un minuto).
 - GitHub desactiva los flujos programados si el repositorio pasa 60 días sin cambios; se reactivan desde la pestaña Actions.
 - Ajustes del robot (días hacia atrás/adelante, tipos de nave excluidos) al inicio de `robot/sincronizar_sdt.py`.
 - Para cambiar el sitio de SharePoint: `CFG.sitio` en `index.html` y `SP_SITIO` en el robot.
